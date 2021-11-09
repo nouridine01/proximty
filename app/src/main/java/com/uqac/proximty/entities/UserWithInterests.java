@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserWithInterests {
-    /*@Embedded
+    @Embedded
     public User user;
     @Relation(
-            parentColumn = "user_id",
-            entityColumn = "interest_id",
+            parentColumn = "uid",
+            entityColumn = "id",
             associateBy = @Junction(UserInterestCrossRef.class)
     )
-    public List<Interest> interests = new ArrayList<>();*/
+    public List<Interest> interests;
 }

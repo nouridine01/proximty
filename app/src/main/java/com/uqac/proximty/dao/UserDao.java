@@ -20,8 +20,8 @@ public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertUsers(User... users);
 
-    //@Insert
-    //public void insertUsersAndFriends(User user, List<User> friends);
+    @Insert
+    public void insertUsersAndFriends(User user, List<User> friends);
 
     @Insert
     public void insertUsersAndInterests(User user, List<Interest> interests);
@@ -35,11 +35,20 @@ public interface UserDao {
     @Query("SELECT * FROM User")
     List<User> getAll();
 
-    /*@Transaction
-    @Query("SELECT * FROM User")
-    public List<UserWithFriends> getUserWithFriends();*/
+    @Query("SELECT * FROM User u WHERE u.pseudo = :pseudo AND u.password = :pwd")
+    User connexion(String pseudo, String pwd);
 
-    /*@Transaction
+    @Query("SELECT * FROM User u WHERE u.pseudo = :pseudo")
+    User getUserByPseudo(String pseudo);
+
+    @Query("SELECT * FROM User u WHERE u.uid = :id")
+    User getUserById(long id);
+
+    @Transaction
     @Query("SELECT * FROM User")
-    public List<UserWithInterests> getUserWithInterests();*/
+    public List<UserWithFriends> getUserWithFriends();
+
+    @Transaction
+    @Query("SELECT * FROM User")
+    public List<UserWithInterests> getUserWithInterests();
 }

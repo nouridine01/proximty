@@ -7,12 +7,12 @@ import androidx.room.Relation;
 import java.util.List;
 
 public class UserWithFriends {
-    /*@Embedded
+    @Embedded
     public User user;
     @Relation(
-            parentColumn = "userId",
-            entityColumn = "friendId",
+            parentColumn = "uid",
+            entityColumn = "uid",
             associateBy = @Junction(UserFriendCrossRef.class)
     )
-    public List<User> friends;*/
+    public List<User> friends;
 }

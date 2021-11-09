@@ -14,10 +14,12 @@ import com.uqac.proximty.entities.UserInterestCrossRef;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Interest.class}, version = 1)
+@Database(entities = {User.class, Interest.class,UserInterestCrossRef.class, UserFriendCrossRef.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract InterestDao interestDao();
+    public abstract UserFriendCrossRefDao userFriendCrossRefDao();
+    public abstract UserInterestCrossRefDao userInterestCrossRefDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

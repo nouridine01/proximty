@@ -15,5 +15,5 @@ public class UserWithInterests {
             entityColumn = "id",
             associateBy = @Junction(UserInterestCrossRef.class)
     )
-    public List<Interest> interests;
+    public List<Interest> interests=new ArrayList<>();
 }

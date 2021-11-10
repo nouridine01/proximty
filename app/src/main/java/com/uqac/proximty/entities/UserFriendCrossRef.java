@@ -15,6 +15,30 @@ import androidx.room.Index;
         },
         indices = {@Index(value = {"friend"})})
 public class UserFriendCrossRef {
-    public long uid;
-    public long friend;
+    private long uid;
+    private long friend;
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
+    public long getFriend() {
+        return friend;
+    }
+
+    public void setFriend(long friend) {
+        this.friend = friend;
+    }
+
+    @Override
+    public String toString() {
+        return "UserFriendCrossRef{" +
+                "uid=" + uid +
+                ", friend=" + friend +
+                '}';
+    }
 }

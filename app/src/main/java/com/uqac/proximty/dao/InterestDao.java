@@ -20,6 +20,9 @@ public interface InterestDao {
     @Delete
     void delete(Interest interest);
 
+    @Query("SELECT * FROM Interest i WHERE i.name = :name")
+    Interest getInterestByName(String name);
+
     @Query("SELECT * FROM Interest")
     List<Interest> getAll();
 }

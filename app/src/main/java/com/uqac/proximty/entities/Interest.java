@@ -27,4 +27,12 @@ public class Interest {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Interest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

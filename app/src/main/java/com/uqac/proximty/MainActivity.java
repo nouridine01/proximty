@@ -1,10 +1,14 @@
 package com.uqac.proximty;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
+
+import com.uqac.proximty.adaptaters.ContactsAdapter;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.InterestDao;
 import com.uqac.proximty.dao.UserDao;
@@ -16,16 +20,15 @@ import com.uqac.proximty.entities.UserFriendCrossRef;
 import com.uqac.proximty.entities.UserInterestCrossRef;
 import com.uqac.proximty.entities.UserWithFriends;
 import com.uqac.proximty.entities.UserWithInterests;
+import com.uqac.proximty.models.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
-
 
 //@AndroidEntryPoint
+
+
 public class MainActivity extends AppCompatActivity {
     //@Inject
     AppDatabase appDatabase;
@@ -35,10 +38,14 @@ public class MainActivity extends AppCompatActivity {
     UserFriendCrossRefDao userFriendCrossRefDao;
     TextView text;
 
+    ArrayList<Contact> contacts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // ...
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_users);
+        //setContentView(R.layout.activity_main);
         //initialisation
         text=findViewById(R.id.text);
         userDao=AppDatabase.getDatabase(this).userDao();
@@ -118,6 +125,22 @@ public class MainActivity extends AppCompatActivity {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+
+
+
+
+        // Lookup the recyclerview in activity layout
+        RecyclerView rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
+
+        // Initialize contacts
+        contacts = Contact.createContactsList(20);
+        // Create adapter passing in the sample user data
+        ContactsAdapter adapter = new ContactsAdapter(contacts);
+        // Attach the adapter to the recyclerview to populate items
+        rvContacts.setAdapter(adapter);
+        // Set layout manager to position the items
+        rvContacts.setLayoutManager(new LinearLayoutManager(this));
+        // That's all!
 
     }
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uqac.proximty.R;
 
 public class LoginActivity extends AppCompatActivity {
 

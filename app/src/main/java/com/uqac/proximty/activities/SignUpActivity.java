@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uqac.proximty.R;
 
 public class SignUpActivity extends AppCompatActivity {
 

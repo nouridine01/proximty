@@ -28,6 +28,10 @@
         <activity
             android:name=".activities.Scan_page"
             android:exported="true">
+        </activity>
+        <activity
+            android:name=".activities.TabActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         //userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);
 
 
-
         List<User> list=new ArrayList<>();
         try {
             System.out.println("----------------list users----------------");

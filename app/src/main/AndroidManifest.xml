@@ -3,20 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.uqac.proximty">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
+
     <application
+        android:name=".HiltApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Proximty"
-        android:name = ".HiltApp">
+        android:theme="@style/Theme.Proximty">
         <activity
+            android:name=".activities.WalkthroughActivity"
             android:noHistory="true"
-            android:theme="@style/Theme.Proximty.NoActionBar"
-            android:name=".activities.WalkthroughActivity"></activity>
+            android:theme="@style/Theme.Proximty.NoActionBar" />
         <activity
             android:name=".activities.SignUpActivity"
             android:noHistory="true"
@@ -27,6 +29,10 @@
             android:theme="@style/Theme.Proximty.NoActionBar" />
         <activity
             android:name=".activities.Scan_page"
+            android:noHistory="true"
+            android:theme="@style/Theme.Proximty.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

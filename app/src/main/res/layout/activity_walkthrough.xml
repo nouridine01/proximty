@@ -11,7 +11,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="12"
-    tools:context=".WalkthroughActivity">
+    tools:context=".activities.WalkthroughActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
@@ -49,18 +49,6 @@
                 android:layout_height="5dp"
                 android:background="@drawable/onboarding_dotunselected"/>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/loginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:backgroundTint="@null"
-            android:background="@drawable/onboarding_button"
-            android:text="LOGIN"
-            android:textColor="@color/whiteTextColor"
-            android:textSize="20dp"
-            android:layout_margin="10dp"/>
 
         <TextView
             android:id="@+id/btn_skip"

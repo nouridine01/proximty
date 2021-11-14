@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
@@ -22,6 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputEditText inputCPassword;
     AppDatabase appDatabase;
     UserDao userDao;
+    private PrefManager prefManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,13 +41,18 @@ public class SignUpActivity extends AppCompatActivity {
      * Si l'eregistrement est bien effectuer alors retourne True sinon False
      * @return
      */
-    public boolean register(){
+
+    public void sigINButton(View view) {
+        startActivity(new Intent(this,LoginActivity.class));
+    }
+
+    public void register(View view) {
         String pseudo = inputPseudo.getText().toString();
         String lastName = inputLastName.getText().toString();
         String firstName = inputFirstName.getText().toString();
         String password = inputPassword.getTag().toString();
         String confirmPassword = inputCPassword.getText().toString();
-
+        userDao=AppDatabase.getDatabase(this).userDao();
         //Function de signUp
         User u = new User();
         u.setLastName(lastName);
@@ -54,15 +61,10 @@ public class SignUpActivity extends AppCompatActivity {
         if(password.equals(confirmPassword)){
             u.setPassword("123");
             userDao.insertUsers(u);
+            prefManager.setFirstTimeLaunch(false);
             startActivity(new Intent(this,Scan_page.class));
         }else {
             Toast.makeText(this,"les mots de passes ne correspondent pas",Toast.LENGTH_LONG).show();
         }
-
-        return false;
-    }
-
-    public void sigINButton(View view) {
-        startActivity(new Intent(this,LoginActivity.class));
     }
 }

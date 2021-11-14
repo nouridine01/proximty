@@ -1,4 +1,4 @@
-package com.uqac.proximity.manager;
+package com.uqac.proximty;
 
 /**
  * Copyright (c) 2021, NIKISS. All Rights Reserved.

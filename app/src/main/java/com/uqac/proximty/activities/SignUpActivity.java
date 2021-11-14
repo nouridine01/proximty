@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.User;
+import com.uqac.proximty.fragments.Scan_page;
+
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -62,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
             u.setPassword("123");
             userDao.insertUsers(u);
             prefManager.setFirstTimeLaunch(false);
-            startActivity(new Intent(this,Scan_page.class));
+            startActivity(new Intent(this, MainActivity.class));
         }else {
             Toast.makeText(this,"les mots de passes ne correspondent pas",Toast.LENGTH_LONG).show();
         }

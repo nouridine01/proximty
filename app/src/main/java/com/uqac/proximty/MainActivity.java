@@ -3,15 +3,20 @@ package com.uqac.proximty;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 
+import com.google.android.material.tabs.TabLayout;
+import com.uqac.proximty.fragments.Scan_page;
 import com.uqac.proximty.activities.WalkthroughActivity;
 import com.uqac.proximty.adaptaters.ContactsAdapter;
+import com.uqac.proximty.adaptaters.TabAdapter;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.InterestDao;
 import com.uqac.proximty.dao.UserDao;
@@ -23,6 +28,7 @@ import com.uqac.proximty.entities.UserFriendCrossRef;
 import com.uqac.proximty.entities.UserInterestCrossRef;
 import com.uqac.proximty.entities.UserWithFriends;
 import com.uqac.proximty.entities.UserWithInterests;
+import com.uqac.proximty.fragments.Contact_page;
 import com.uqac.proximty.models.Contact;
 
 import java.util.ArrayList;
@@ -45,19 +51,35 @@ public class MainActivity extends AppCompatActivity {
 
     private PrefManager prefManager;
 
+    private TabAdapter adapter;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // ...
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        // Checking for first time launch - before calling setContentView()
-        prefManager = new PrefManager(this);
+
+        /*prefManager = new PrefManager(this);
         if (prefManager.isFirstTimeLaunch()) {
             launchWalktroughScreen();
             finish();
-        }
+        }*/
 
-        //setContentView(R.layout.activity_users);
-        setContentView(R.layout.scan);
+        setContentView(R.layout.activity_main);
+
+
+        int[] tabIcons = {
+                //R.drawable.eleordi,
+                //R.drawable.prof
+        };
+
+        viewPager =  findViewById(R.id.viewPager);
+        tabLayout =  findViewById(R.id.tabLayout);
+
+        adapter = new TabAdapter(getSupportFragmentManager());
+        adapter.addFragment(new Scan_page(), "Scan");
+        adapter.addFragment(new Contact_page(), "Contact");
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
 
 
         /*// Lookup the recyclerview in activity layout

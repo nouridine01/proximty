@@ -5,8 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uqac.proximty.R;
+import com.uqac.proximty.dao.AppDatabase;
+import com.uqac.proximty.dao.UserDao;
+import com.uqac.proximty.entities.User;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -15,7 +20,8 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputEditText inputFirstName;
     private TextInputEditText inputPassword;
     private TextInputEditText inputCPassword;
-
+    AppDatabase appDatabase;
+    UserDao userDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +47,17 @@ public class SignUpActivity extends AppCompatActivity {
         String confirmPassword = inputCPassword.getText().toString();
 
         //Function de signUp
+        User u = new User();
+        u.setLastName(lastName);
+        u.setFirstName(firstName);
+        u.setPseudo(pseudo);
+        if(password.equals(confirmPassword)){
+            u.setPassword("123");
+            userDao.insertUsers(u);
+            startActivity(new Intent(this,Scan_page.class));
+        }else {
+            Toast.makeText(this,"les mots de passes ne correspondent pas",Toast.LENGTH_LONG).show();
+        }
 
         return false;
     }

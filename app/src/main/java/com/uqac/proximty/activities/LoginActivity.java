@@ -6,13 +6,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.uqac.proximty.R;
+import com.uqac.proximty.dao.AppDatabase;
+import com.uqac.proximty.dao.UserDao;
+import com.uqac.proximty.entities.User;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText inputPseudo;
     private TextInputEditText inputPassword;
+    AppDatabase appDatabase;
+    UserDao userDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +34,14 @@ public class LoginActivity extends AppCompatActivity {
 
         String pseudo = inputPseudo.getText().toString();
         String password = inputPassword.getText().toString();
-        System.out.println(pseudo+ "  "+password);
-        startActivity(new Intent(this,LoginActivity.class));
+        userDao=AppDatabase.getDatabase(this).userDao();
+        User user = userDao.connexion(pseudo,password);
+        if(user != null){
+            startActivity(new Intent(this,Scan_page.class));
+        }else {
+            Toast.makeText(this,"identifiant invalide",Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void sigUpButton(View view) {

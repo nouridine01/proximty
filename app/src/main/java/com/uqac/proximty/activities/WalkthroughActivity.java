@@ -37,7 +37,7 @@ public class WalkthroughActivity extends AppCompatActivity {
     private TextView[] dots;
     private int[] layouts;
     private TextView btnSkip;
-    private Button loginBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class WalkthroughActivity extends AppCompatActivity {
         viewPager =  findViewById(R.id.view_pager);
         dotsLayout =  findViewById(R.id.layoutDots);
         btnSkip =  findViewById(R.id.btn_skip);
-        loginBtn = findViewById(R.id.loginBtn);
+
 
         layouts = new int[]{
                 R.layout.welcome_slide1,
@@ -75,12 +75,7 @@ public class WalkthroughActivity extends AppCompatActivity {
             }
         });
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLoginActivity();
-            }
-        });
+
     }
 
     /**
@@ -120,11 +115,6 @@ public class WalkthroughActivity extends AppCompatActivity {
         }
     }
 
-    private void startLoginActivity(){
-        //prefManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
-    }
     private void launchHomeScreen() {
         //prefManager.setFirstTimeLaunch(false);
         startActivity(new Intent(this, MainActivity.class));

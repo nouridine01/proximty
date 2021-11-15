@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Contact> contacts;
 
+    User user;
+
     private PrefManager prefManager;
 
     private TabAdapter adapter;
@@ -59,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        Bundle data = getIntent().getExtras();
+        user = (User) data.getParcelable("user");
+        System.out.println(user.toString());
 
         prefManager = new PrefManager(this);
         if (prefManager.isFirstTimeLaunch()) {

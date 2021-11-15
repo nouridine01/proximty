@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ProfilFragment">
+    tools:context=".ProfileModif">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="96dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -24,7 +24,6 @@
             android:id="@+id/modifPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
             android:text="Modifier"
             app:layout_constraintBottom_toTopOf="@+id/prenom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -125,5 +124,4 @@
             app:layout_constraintTop_toBottomOf="@+id/interets" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</FrameLayout>
+</ScrollView>

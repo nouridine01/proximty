@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.uqac.proximty.fragments.NotificationFragment;
+import com.uqac.proximty.fragments.ProfilFragment;
 import com.uqac.proximty.fragments.Scan_page;
 import com.uqac.proximty.activities.WalkthroughActivity;
 import com.uqac.proximty.adaptaters.ContactsAdapter;
@@ -68,19 +70,26 @@ public class MainActivity extends AppCompatActivity {
 
 
         int[] tabIcons = {
-                //R.drawable.eleordi,
-                //R.drawable.prof
+                R.drawable.scan,
+                R.drawable.email,
+                R.drawable.notification,
+                R.drawable.user
         };
 
         viewPager =  findViewById(R.id.viewPager);
         tabLayout =  findViewById(R.id.tabLayout);
 
         adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Scan_page(), "Scan");
-        adapter.addFragment(new Contact_page(), "Contact");
+        adapter.addFragment(new Scan_page(), "");
+        adapter.addFragment(new Contact_page(), "");
+        adapter.addFragment(new NotificationFragment(), "");
+        adapter.addFragment(new ProfilFragment(), "");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
 
         /*// Lookup the recyclerview in activity layout
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.rvContacts);

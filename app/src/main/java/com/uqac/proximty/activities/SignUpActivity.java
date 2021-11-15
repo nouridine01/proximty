@@ -33,11 +33,12 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        inputPseudo = findViewById(R.id.input_pseudo);
+        inputPseudo = findViewById(R.id.input_pseudo_su);
         inputLastName = findViewById(R.id.input_lastname);
         inputFirstName = findViewById(R.id.input_firstname);
         inputPassword = findViewById(R.id.input_password_up);
         inputCPassword = findViewById(R.id.input_cpassword_up);
+        prefManager = new PrefManager(this);
     }
 
     /**
@@ -54,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
         String pseudo = inputPseudo.getText().toString();
         String lastName = inputLastName.getText().toString();
         String firstName = inputFirstName.getText().toString();
-        String password = inputPassword.getTag().toString();
+        String password = inputPassword.getText().toString();
         String confirmPassword = inputCPassword.getText().toString();
         userDao=AppDatabase.getDatabase(this).userDao();
         //Function de signUp
@@ -66,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity {
             u.setPassword("123");
             userDao.insertUsers(u);
             prefManager.setFirstTimeLaunch(false);
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
         }else {
             Toast.makeText(this,"les mots de passes ne correspondent pas",Toast.LENGTH_LONG).show();
         }

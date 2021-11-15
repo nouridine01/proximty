@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         inputPseudo = findViewById(R.id.input_pseudo);
         inputPassword = findViewById(R.id.input_password);
+        prefManager = new PrefManager(this);
     }
 
     public void loginButton(View view) {
@@ -41,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         User user = userDao.connexion(pseudo,password);
         if(user != null){
             prefManager.setFirstTimeLaunch(false);
-            Toast.makeText(this,"correst",Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, MainActivity.class));
         }else {
             Toast.makeText(this,"identifiant invalide",Toast.LENGTH_LONG).show();

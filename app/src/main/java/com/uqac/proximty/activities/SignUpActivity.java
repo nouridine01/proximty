@@ -64,7 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
         u.setFirstName(firstName);
         u.setPseudo(pseudo);
         if(password.equals(confirmPassword)){
-            u.setPassword("123");
+            u.setPassword(password);
             userDao.insertUsers(u);
             prefManager.setFirstTimeLaunch(false);
             startActivity(new Intent(this, LoginActivity.class));

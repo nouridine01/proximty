@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        /*prefManager = new PrefManager(this);
+        prefManager = new PrefManager(this);
         if (prefManager.isFirstTimeLaunch()) {
             launchWalktroughScreen();
             finish();
-        }*/
+        }
 
         setContentView(R.layout.activity_main);
 

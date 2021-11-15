@@ -54,14 +54,18 @@ public class Scan_page extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate  (savedInstanceState);
-        getActivity().setContentView(R.layout.scan);
-        initialSetup();
     }
 
-    private void initialSetup() {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initialSetup(view);
+    }
+
+    private void initialSetup(View view) {
         // layout files
-        rippleBackground = (RippleBackground)getActivity().findViewById(R.id.content);
-        centerDeviceIcon = (ImageView)getActivity().findViewById(R.id.centerImage);
+        rippleBackground = (RippleBackground) view.findViewById(R.id.content);
+        centerDeviceIcon = (ImageView) view.findViewById(R.id.centerImage);
         // add onClick Listeners
         centerDeviceIcon.setOnClickListener(this);
 

@@ -32,13 +32,18 @@ public class Contact_page extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate  (savedInstanceState);
-        getActivity().setContentView(R.layout.activity_users);
-        populateContacts();
+
     }
 
-    public void populateContacts() {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        populateContacts(view);
+    }
+
+    public void populateContacts(View view) {
         // Lookup the recyclerview in activity layout
-        RecyclerView rvContacts = (RecyclerView) getActivity().findViewById(R.id.rvContacts);
+        RecyclerView rvContacts = (RecyclerView) view.findViewById(R.id.rvContacts);
 
         // Initialize contacts
         ArrayList<Contact> contacts = Contact.createContactsList(20);

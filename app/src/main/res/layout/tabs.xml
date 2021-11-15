@@ -3,46 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="fixed"
-        tools:ignore="MissingConstraints"
-        >
+        tools:ignore="MissingConstraints">
 
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItemScan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="scan"
+
             />
-            <!--android:icon="@drawable/ic_favorite_24dp"-->
+        <!--android:icon="@drawable/ic_favorite_24dp"-->
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItemMessages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="messages"
-            />
-            <!--android:icon="@drawable/ic_music_24dp"-->
+            android:text="messages" />
+        <!--android:icon="@drawable/ic_music_24dp"-->
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItemNotifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="notifications"
-            />
-            <!--android:icon="@drawable/ic_search_24dp"-->
+            android:text="notifications" />
+        <!--android:icon="@drawable/ic_search_24dp"-->
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItemProfil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="profil"
-            />
+            android:text="profil" />
         <!--android:icon="@drawable/ic_search_24dp"-->
 
     </com.google.android.material.tabs.TabLayout>
+
+    <fragment
+        android:name="com.uqac.proximty.fragments.Scan_page"
+        android:id="@+id/fragment_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

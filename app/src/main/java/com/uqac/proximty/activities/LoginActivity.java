@@ -9,11 +9,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.User;
+import com.uqac.proximty.fragments.Scan_page;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         inputPseudo = findViewById(R.id.input_pseudo);
         inputPassword = findViewById(R.id.input_password);
+        prefManager = new PrefManager(this);
     }
 
     public void loginButton(View view) {
@@ -38,8 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         User user = userDao.connexion(pseudo,password);
         if(user != null){
             prefManager.setFirstTimeLaunch(false);
-            Toast.makeText(this,"correst",Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this,Scan_page.class));
+            startActivity(new Intent(this, MainActivity.class));
         }else {
             Toast.makeText(this,"identifiant invalide",Toast.LENGTH_LONG).show();
         }

@@ -28,17 +28,19 @@
             android:noHistory="true"
             android:theme="@style/Theme.Proximty.NoActionBar" />
         <activity
-            android:name=".activities.Scan_page"
-            android:noHistory="true"
-            android:theme="@style/Theme.Proximty.NoActionBar" />
-        <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Proximty.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.TabActivity"
+            android:exported="true">
+
         </activity>
     </application>
 

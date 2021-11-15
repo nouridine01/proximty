@@ -1,4 +1,5 @@
-package com.uqac.proximty.activities;
+package com.uqac.proximty.fragments;
+
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -16,18 +17,20 @@ import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.skyfishjy.library.RippleBackground;
 import com.uqac.proximty.R;
 
 import java.util.ArrayList;
 
-public class Scan_page extends AppCompatActivity implements View.OnClickListener {
+public class Scan_page extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "Scan";
     private static final int SEPRATION_DIST_THRESHOLD = 50;
@@ -38,22 +41,36 @@ public class Scan_page extends AppCompatActivity implements View.OnClickListener
     ImageView centerDeviceIcon;
     ArrayList<Point> device_points = new ArrayList<>();
 
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate  (savedInstanceState);
-        setContentView(R.layout.scan);
-        initialSetup();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        //Inflate the layout for this fragment
+
+        return inflater.inflate(R.layout.scan, container, false);
     }
 
-    private void initialSetup() {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate  (savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initialSetup(view);
+    }
+
+    private void initialSetup(View view) {
         // layout files
-        rippleBackground = (RippleBackground)findViewById(R.id.content);
-        centerDeviceIcon = (ImageView)findViewById(R.id.centerImage);
+        rippleBackground = (RippleBackground) view.findViewById(R.id.content);
+        centerDeviceIcon = (ImageView) view.findViewById(R.id.centerImage);
         // add onClick Listeners
         centerDeviceIcon.setOnClickListener(this);
 
         // center button position
-        Display display = getWindowManager(). getDefaultDisplay();
+        Display display = getActivity().getWindowManager(). getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         device_points.add(new Point(size.x / 2, size.y / 2));
@@ -62,7 +79,7 @@ public class Scan_page extends AppCompatActivity implements View.OnClickListener
     }
 
     void checkLocationEnabled(){
-        LocationManager lm = (LocationManager)Scan_page.this.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager lm = (LocationManager) Scan_page.this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
 
@@ -76,7 +93,7 @@ public class Scan_page extends AppCompatActivity implements View.OnClickListener
 
         if(!gps_enabled && !network_enabled) {
             // notify user
-            new AlertDialog.Builder(Scan_page.this)
+            new AlertDialog.Builder(Scan_page.this.getActivity())
                     .setTitle(R.string.gps_network_not_enabled_title)
                     .setMessage(R.string.gps_network_not_enabled)
                     .setPositiveButton(R.string.open_location_settings, new DialogInterface.OnClickListener() {
@@ -107,7 +124,7 @@ public class Scan_page extends AppCompatActivity implements View.OnClickListener
     }
 
     public View createNewDevice(String device_name){
-        View device1 = LayoutInflater.from(this).inflate(R.layout.device_icon, null);
+        View device1 = LayoutInflater.from(this.getActivity()).inflate(R.layout.device_icon, null);
         Point new_point = generateRandomPosition();
         RippleBackground.LayoutParams params = new RippleBackground.LayoutParams(350,350);
         params.setMargins(new_point.x, new_point.y, 0, 0);
@@ -138,7 +155,7 @@ public class Scan_page extends AppCompatActivity implements View.OnClickListener
     }
 
     Point generateRandomPosition(){
-        Display display = getWindowManager(). getDefaultDisplay();
+        Display display = getActivity().getWindowManager(). getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int SCREEN_WIDTH = size.x;

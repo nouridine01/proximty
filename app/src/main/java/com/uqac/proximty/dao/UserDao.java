@@ -5,6 +5,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RewriteQueriesToDropUnusedColumns;
+import androidx.room.RoomWarnings;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
@@ -35,6 +37,13 @@ public interface UserDao {
     @Query("SELECT * FROM User")
     List<User> getAll();
 
+    @RewriteQueriesToDropUnusedColumns
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Transaction
+    @Query("SELECT u.* FROM User u JOIN UserFriendCrossRef uf ON u.uid=uf.friend WHERE uf.uid=:id AND u.uid<>:id")
+    List<User> getUserFriends(Long id);
+
+
     @Query("SELECT * FROM User u WHERE u.pseudo = :pseudo AND u.password = :pwd")
     User connexion(String pseudo, String pwd);
 
@@ -48,10 +57,12 @@ public interface UserDao {
     @Query("SELECT * FROM User")
     public List<UserWithFriends> getUserWithFriends();
 
-    @Transaction
-    //@Query("SELECT * FROM User u1 INNER JOIN UserFriendCrossRef uf ON u1.uid=uf.uid INNER JOIN User u2 ON u2.uid=uf.friend WHERE u1.uid=:id")
-    @Query("SELECT * FROM User u1 WHERE u1.uid=:id")
-    public UserWithFriends getUserWithFriends(long id);
+    /*@Transaction
+    @RewriteQueriesToDropUnusedColumns
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    //@Query("SELECT * FROM User u JOIN UserFriendCrossRef uf ON u.uid=uf.uid JOIN User f ON f.uid=uf.friend WHERE u.uid=:id")
+    @Query("SELECT * FROM User u WHERE u.uid=:id")
+    public UserWithFriends getUserWithFriends(long id);*/
 
     @Transaction
     @Query("SELECT * FROM User u WHERE u.uid=:id")

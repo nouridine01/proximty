@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         u2.setPseudo("bili");
         u.setPassword("123");
         //userDao.insertUsers(u,u2);
+        //
 
         //insertion interest
         Interest t1 = new Interest();

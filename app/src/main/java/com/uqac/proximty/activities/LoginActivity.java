@@ -42,9 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         User user = userDao.connexion(pseudo,password);
         if(user != null){
             prefManager.setFirstTimeLaunch(false);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
+            prefManager.setUserId(user.getUid());
+            startActivity(new Intent(this, MainActivity.class));
         }else {
             Toast.makeText(this,"identifiant invalide",Toast.LENGTH_LONG).show();
         }

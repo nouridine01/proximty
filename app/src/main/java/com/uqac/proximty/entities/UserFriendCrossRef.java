@@ -10,8 +10,8 @@ import androidx.room.Index;
                         parentColumns = "uid",
                         childColumns = "uid"),
                 @ForeignKey(entity = User.class,
-                        parentColumns = "uid",
-                        childColumns = "friend")
+                        parentColumns = {"uid"},
+                        childColumns = {"friend"})
         },
         indices = {@Index(value = {"friend"})})
 public class UserFriendCrossRef {

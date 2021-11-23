@@ -172,7 +172,7 @@ public class WalkthroughActivity extends AppCompatActivity {
         UserInterestCrossRef userInterestCrossRef=new UserInterestCrossRef();
         userInterestCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
         userInterestCrossRef.setId(interestDao.getInterestByName("Lecture").getId());
-        //userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);
+        userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);
 
 
         /*List<User> list=new ArrayList<>();
@@ -200,8 +200,8 @@ public class WalkthroughActivity extends AppCompatActivity {
             System.out.println(c.toString());
 
             System.out.println("----------------user friends----------------");
-            UserWithFriends userWithFriends = userDao.getUserWithFriends(userDao.getUserByPseudo("noor").getUid());
-            System.out.println(userWithFriends.friends.get(0).toString());
+            //UserWithFriends userWithFriends = userDao.getUserWithFriends(userDao.getUserByPseudo("noor").getUid());
+            //System.out.println(userWithFriends.friends.get(0).toString());
 
             System.out.println("----------------user interests----------------");
             UserWithInterests userWithInterests = userDao.getUserWithInterests(userDao.getUserByPseudo("noor").getUid());

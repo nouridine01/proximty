@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         //creation friend
         UserFriendCrossRef userFriendCrossRef = new UserFriendCrossRef();
         userFriendCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
-        userFriendCrossRef.setFriend(userDao.getUserByPseudo("test").getUid());
+        //userFriendCrossRef.setFriend(userDao.getUserByPseudo("test").getUid());
         //userFriendCrossRefDao.insertUserFriendCrossRef(userFriendCrossRef);
 
         //attribute interest

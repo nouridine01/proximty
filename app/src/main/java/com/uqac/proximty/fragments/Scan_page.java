@@ -19,8 +19,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -29,6 +32,10 @@ import com.skyfishjy.library.RippleBackground;
 import com.uqac.proximty.R;
 
 import java.util.ArrayList;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.uqac.proximty.activities.ChatActivity;
+
+//https://github.com/barmangolap15/Android-Bottom-Sheet-Dialog-Java-Android-Studio
 
 public class Scan_page extends Fragment implements View.OnClickListener {
 
@@ -40,6 +47,7 @@ public class Scan_page extends Fragment implements View.OnClickListener {
     RippleBackground rippleBackground;
     ImageView centerDeviceIcon;
     ArrayList<Point> device_points = new ArrayList<>();
+
 
 
 
@@ -74,6 +82,8 @@ public class Scan_page extends Fragment implements View.OnClickListener {
         Point size = new Point();
         display.getSize(size);
         device_points.add(new Point(size.x / 2, size.y / 2));
+
+
         Log.d("MainActivity", size.x + "  " + size.y);
 
     }
@@ -111,7 +121,6 @@ public class Scan_page extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         rippleBackground.startRippleAnimation();
 
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -121,6 +130,32 @@ public class Scan_page extends Fragment implements View.OnClickListener {
             }
         }, 5000);
 
+        showUserDetailDialo(view);
+
+    }
+
+    private void showUserDetailDialo(View view) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                view.getContext(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(view.getContext())
+                .inflate(R.layout.layout_bottom_sheet,
+                        (LinearLayout)view.findViewById(R.id.bottomSheetContainer));
+        bottomSheetView.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Shared!!!", Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        bottomSheetView.findViewById(R.id.sendmessage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), ChatActivity.class));
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
     }
 
     public View createNewDevice(String device_name){

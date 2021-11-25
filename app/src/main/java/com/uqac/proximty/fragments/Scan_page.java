@@ -41,7 +41,7 @@ import com.uqac.proximty.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Scan_page extends Fragment implements View.OnClickListener, WifiP2pManager.PeerListListener {
+public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListener {
 
     private static final String TAG = "Scan";
     private static final int SEPRATION_DIST_THRESHOLD = 50;
@@ -116,7 +116,11 @@ public class Scan_page extends Fragment implements View.OnClickListener, WifiP2p
         rippleBackground = (RippleBackground) view.findViewById(R.id.content);
         centerDeviceIcon = (ImageView) view.findViewById(R.id.centerImage);
         // add onClick Listeners
-        centerDeviceIcon.setOnClickListener(this);
+        centerDeviceIcon.setOnClickListener(v -> {
+            rippleBackground.startRippleAnimation();
+
+            discover();
+        });
 
         // center button position
         Display display = getActivity().getWindowManager(). getDefaultDisplay();
@@ -156,20 +160,15 @@ public class Scan_page extends Fragment implements View.OnClickListener, WifiP2p
         }
     }
 
-    @Override
+    /*@Override
     public void onClick(View view) {
+
+
         rippleBackground.startRippleAnimation();
 
         discover();
 
-        peers.forEach(p->{
-                View tmp_device = createNewDevice(p.deviceName);
-                rippleBackground.addView(tmp_device);
-            foundDevice(tmp_device);
-        });
-
-
-    }
+    }*/
 
     public View createNewDevice(String device_name){
         View device1 = LayoutInflater.from(this.getActivity()).inflate(R.layout.device_icon, null);
@@ -182,7 +181,10 @@ public class Scan_page extends Fragment implements View.OnClickListener, WifiP2p
         int device_id = (int)System.currentTimeMillis() + device_count++;
         txt_device1.setText(device_name);
         device1.setId(device_id);
-        device1.setOnClickListener(this);
+        device1.setOnClickListener(v -> {
+            //lancer un socket de communication
+            //affichage de profil
+        });
 
         device1.setVisibility(View.INVISIBLE);
         return device1;
@@ -270,11 +272,17 @@ public class Scan_page extends Fragment implements View.OnClickListener, WifiP2p
 
         peers.clear();
         peers.addAll(peerList.getDeviceList());
-        //((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+
         if (peers.size() == 0) {
             Log.d(MainActivity.TAG, "No devices found");
             return;
         }
+
+        peers.forEach(p->{
+            View tmp_device = createNewDevice(p.deviceName);
+            rippleBackground.addView(tmp_device);
+            foundDevice(tmp_device);
+        });
 
     }
 

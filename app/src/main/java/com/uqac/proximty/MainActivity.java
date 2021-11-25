@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         tabLayout.getTabAt(3).setIcon(tabIcons[3]);
 
 
-        // add necessary intent values to be matched.
+
 
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);

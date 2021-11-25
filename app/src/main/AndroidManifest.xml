@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.uqac.proximty">
 
+
     <uses-sdk android:minSdkVersion="28" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -10,6 +11,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
 
 
@@ -21,6 +23,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Proximty">
+        <activity
+            android:theme="@style/Theme.Proximty.NoActionBar"
+            android:name=".activities.ChatActivity"
+            android:exported="true" >
+
+        </activity>
         <activity
             android:name=".activities.WalkthroughActivity"
             android:noHistory="true"
@@ -45,9 +53,8 @@
         </activity>
         <activity
             android:name=".activities.TabActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
     </application>
+
 
 </manifest>

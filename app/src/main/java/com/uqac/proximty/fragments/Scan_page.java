@@ -26,7 +26,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +41,12 @@ import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.R;
 
 import java.util.ArrayList;
+
 import java.util.List;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.uqac.proximty.activities.ChatActivity;
+
 
 public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListener {
 
@@ -62,6 +69,7 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
     public void setPeers(List<WifiP2pDevice> peers) {
         this.peers = peers;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,6 +135,8 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
         Point size = new Point();
         display.getSize(size);
         device_points.add(new Point(size.x / 2, size.y / 2));
+
+
         Log.d("MainActivity", size.x + "  " + size.y);
 
     }
@@ -164,11 +174,37 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
     public void onClick(View view) {
 
 
+
         rippleBackground.startRippleAnimation();
 
         discover();
 
     }*/
+
+    private void showUserDetailDialo(View view) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                view.getContext(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView = LayoutInflater.from(view.getContext())
+                .inflate(R.layout.layout_bottom_sheet,
+                        (LinearLayout)view.findViewById(R.id.bottomSheetContainer));
+        bottomSheetView.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Shared!!!", Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        bottomSheetView.findViewById(R.id.sendmessage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), ChatActivity.class));
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
+
 
     public View createNewDevice(String device_name){
         View device1 = LayoutInflater.from(this.getActivity()).inflate(R.layout.device_icon, null);

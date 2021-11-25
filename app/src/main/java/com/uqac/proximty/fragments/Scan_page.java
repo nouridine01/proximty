@@ -1,15 +1,22 @@
 package com.uqac.proximty.fragments;
 
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.LocationManager;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -21,16 +28,20 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.skyfishjy.library.RippleBackground;
+import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Scan_page extends Fragment implements View.OnClickListener {
+public class Scan_page extends Fragment implements View.OnClickListener, WifiP2pManager.PeerListListener {
 
     private static final String TAG = "Scan";
     private static final int SEPRATION_DIST_THRESHOLD = 50;
@@ -41,7 +52,16 @@ public class Scan_page extends Fragment implements View.OnClickListener {
     ImageView centerDeviceIcon;
     ArrayList<Point> device_points = new ArrayList<>();
 
+    private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+    private WifiP2pDevice device;
 
+    public List<WifiP2pDevice> getPeers() {
+        return peers;
+    }
+
+    public void setPeers(List<WifiP2pDevice> peers) {
+        this.peers = peers;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,13 +73,42 @@ public class Scan_page extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate  (savedInstanceState);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initialSetup(view);
+    }
+
+    public void discover() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        MainActivity activity= (MainActivity) getActivity();
+        activity.getManager().discoverPeers(activity.getChannel(), new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getActivity(), "Discovery Initiated",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                Toast.makeText(getActivity(), "Discovery Failed : " + reasonCode,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initialSetup(View view) {
@@ -111,15 +160,14 @@ public class Scan_page extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         rippleBackground.startRippleAnimation();
 
+        discover();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                View tmp_device = createNewDevice("device" + device_count);
+        peers.forEach(p->{
+                View tmp_device = createNewDevice(p.deviceName);
                 rippleBackground.addView(tmp_device);
-                foundDevice(tmp_device);
-            }
-        }, 5000);
+            foundDevice(tmp_device);
+        });
+
 
     }
 
@@ -189,5 +237,64 @@ public class Scan_page extends Fragment implements View.OnClickListener {
             }
         }
         return false;
+    }
+
+    //------------------------------------------------
+    public WifiP2pDevice getDevice() {
+        return device;
+    }
+
+    private static String getDeviceStatus(int deviceStatus) {
+        Log.d(MainActivity.TAG, "Peer status :" + deviceStatus);
+        switch (deviceStatus) {
+            case WifiP2pDevice.AVAILABLE:
+                return "Available";
+            case WifiP2pDevice.INVITED:
+                return "Invited";
+            case WifiP2pDevice.CONNECTED:
+                return "Connected";
+            case WifiP2pDevice.FAILED:
+                return "Failed";
+            case WifiP2pDevice.UNAVAILABLE:
+                return "Unavailable";
+            default:
+                return "Unknown";
+
+        }
+    }
+
+
+
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peerList) {
+
+        peers.clear();
+        peers.addAll(peerList.getDeviceList());
+        //((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+        if (peers.size() == 0) {
+            Log.d(MainActivity.TAG, "No devices found");
+            return;
+        }
+
+    }
+
+    public void clearPeers() {
+        peers.clear();
+        //((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+    }
+
+    /**
+     * An interface-callback for the activity to listen to fragment interaction
+     * events.
+     */
+    public interface DeviceActionListener {
+
+        void showDetails(WifiP2pDevice device);
+
+        void cancelDisconnect();
+
+        void connect(WifiP2pConfig config);
+
+        void disconnect();
     }
 }

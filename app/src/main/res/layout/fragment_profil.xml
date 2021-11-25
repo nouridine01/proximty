@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_bk"
     tools:context=".fragments.ProfilFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/photo"
@@ -80,54 +80,24 @@
             app:layout_constraintTop_toBottomOf="@+id/pseudo" />
 
         <TextView
-            android:id="@+id/interetsTitre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:text="Centres d'intérêts"
             android:textSize="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/interets"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/password" />
 
-        <TableLayout
+
+        <com.uqac.proximty.models.FlowLayout
             android:id="@+id/interets"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/interetsTitre">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/exemple"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:text="Lecture" />
-
-                <ImageButton
-                    android:id="@+id/addInteret"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:srcCompat="@android:drawable/ic_menu_add" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </TableLayout>
+            app:layout_constraintTop_toBottomOf="@+id/addInteret" />
 
         <Button
             android:id="@+id/save"
@@ -138,6 +108,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/interets" />
 
+        <ImageButton
+            android:id="@+id/addInteret"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            app:srcCompat="@android:drawable/ic_menu_add" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</ScrollView>

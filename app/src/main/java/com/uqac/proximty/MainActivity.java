@@ -117,17 +117,19 @@ public class MainActivity extends AppCompatActivity {
         userFriendCrossRefDao=AppDatabase.getDatabase(this).userFriendCrossRefDao();
         userInterestCrossRefDao=AppDatabase.getDatabase(this).userInterestCrossRefDao();
         // insertion users
-        User u = new User();
+        /*User u = new User();
         u.setLastName("nouridine");
         u.setFirstName("oumarou");
         u.setPseudo("noor");
         u.setPassword("123");
+        u.setPhoto("default_profile_pic");
 
         User u2 = new User();
         u2.setLastName("bili");
         u2.setFirstName("oumar");
         u2.setPseudo("bili");
-        u.setPassword("123");
+        u2.setPassword("123");
+        u2.setPhoto("default_profile_pic");
         //userDao.insertUsers(u,u2);
         //
 
@@ -196,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
         }catch (Exception e){
             System.out.println(e.getMessage());
-        }
+        }*/
     }
 
     private void launchWalktroughScreen() {

@@ -14,6 +14,7 @@ package com.uqac.proximty.models;
 
 public class Messages {
 
+
     String message;
     String senderId;
     String receverId;

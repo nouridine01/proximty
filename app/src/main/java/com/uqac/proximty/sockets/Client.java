@@ -7,31 +7,43 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class Client {
+public class Client extends Thread{
 
-	public static void main(String[] args) {
+	private Socket serveur;
+
+	private Socket client;
+
+
+
+	public Client(Socket serveur){
+		//this.client=client;
+		this.serveur=serveur;
+	}
+
+
+	@Override
+	public void run() {
 		// TODO Auto-generated method stub
 		
 		try {
 			System.out.println("connexion avec le serveur");
-			Socket s = new Socket("localhost", 8080);
+
 			
-			InputStream is = s.getInputStream();
-			OutputStream os = s.getOutputStream();
-			
-			System.out.println("donner un nombre");
-			Scanner sc = new Scanner(System.in);
-			
-			
-			int n = sc.nextInt();
-			
-			System.out.println("nombre envoy�e au serveur");
-			os.write(n);
-			
-			System.out.println("reponse du serveur");
-			n= is.read();
-			System.out.println(n);
-			s.close();
+			InputStream is = serveur.getInputStream();
+			OutputStream os = serveur.getOutputStream();
+
+			//recup les donnees
+
+			while (true){
+
+				System.out.println("nombre envoy�e au serveur");
+				//os.write();
+
+				System.out.println("reponse du serveur");
+				//is.read();
+
+			}
+
 			
 			
 		} catch (UnknownHostException e) {
@@ -40,6 +52,12 @@ public class Client {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			try {
+				serveur.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

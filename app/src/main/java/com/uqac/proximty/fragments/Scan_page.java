@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,15 +41,21 @@ import com.skyfishjy.library.RippleBackground;
 import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.R;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.activities.ChatActivity;
+import com.uqac.proximty.sockets.Client;
+import com.uqac.proximty.sockets.ServeurMT;
 
 
-public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListener {
+public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener {
 
     private static final String TAG = "Scan";
     private static final int SEPRATION_DIST_THRESHOLD = 50;
@@ -62,6 +69,8 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     private WifiP2pDevice device;
 
+    Map<String,Socket> sockets = new HashMap<String,Socket>();
+
     public List<WifiP2pDevice> getPeers() {
         return peers;
     }
@@ -70,6 +79,11 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
         this.peers = peers;
     }
 
+
+    private WifiP2pDevice deviceToConnected;
+    private WifiP2pInfo info;
+
+    public static ServeurMT serveurMT = new ServeurMT();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -126,7 +140,7 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
         // add onClick Listeners
         centerDeviceIcon.setOnClickListener(v -> {
             rippleBackground.startRippleAnimation();
-
+            //serveurMT.start();
             discover();
         });
 
@@ -138,6 +152,34 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
 
 
         Log.d("MainActivity", size.x + "  " + size.y);
+
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+
+        this.info = info;
+
+
+        // The owner IP is now known.
+
+        // After the group negotiation, we assign the group owner as the file
+        // server. The file server is single threaded, single connection server
+        // socket.
+        if (info.groupFormed && info.isGroupOwner) {
+            //comportement client
+            try {
+                Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
+                Client client= new Client(serveur);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (info.groupFormed) {
+           //serveur comportement
+
+        }
 
     }
 
@@ -190,7 +232,7 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
         bottomSheetView.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Shared!!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Shared!!!" +view.getId(), Toast.LENGTH_SHORT).show();
                 bottomSheetDialog.dismiss();
             }
         });
@@ -218,8 +260,10 @@ public class Scan_page extends Fragment implements  WifiP2pManager.PeerListListe
         txt_device1.setText(device_name);
         device1.setId(device_id);
         device1.setOnClickListener(v -> {
-            //lancer un socket de communication
-            //affichage de profil
+            if(peers.size()>0){
+                deviceToConnected=peers.stream().filter(p->p.deviceName==device_name).findFirst().get();
+            }
+            showUserDetailDialo(device1);
         });
 
         device1.setVisibility(View.INVISIBLE);

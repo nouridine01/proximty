@@ -13,11 +13,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.LocationManager;
+
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+
+import android.os.Build;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -28,13 +32,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.core.app.ActivityCompat;
+
+import androidx.core.widget.TextViewCompat;
+
 import androidx.fragment.app.Fragment;
 
 import com.skyfishjy.library.RippleBackground;
@@ -243,6 +252,11 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 startActivity(new Intent(view.getContext(), ChatActivity.class));
             }
         });
+
+        GridLayout gridLayoutInterte = bottomSheetView.findViewById(R.id.grid_interet);
+        TextView textInteret=  new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
+        textInteret.setText("programmaticaly");
+        gridLayoutInterte.addView(textInteret);
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
     }

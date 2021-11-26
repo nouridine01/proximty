@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.LocationManager;
 
+import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -92,7 +93,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     private WifiP2pDevice deviceToConnected;
     private WifiP2pInfo info;
 
-    public static ServeurMT serveurMT = new ServeurMT();
+    public ServeurMT serveurMT = new ServeurMT(getActivity());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -149,8 +150,9 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         // add onClick Listeners
         centerDeviceIcon.setOnClickListener(v -> {
             rippleBackground.startRippleAnimation();
-            //serveurMT.start();
+            serveurMT.start();
             discover();
+            showUserDetailDialo(view);
         });
 
         // center button position
@@ -179,8 +181,8 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
             //comportement client
             try {
                 Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
-                Client client= new Client(serveur);
-
+                Client client= new Client(serveur,getActivity());
+                client.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -233,6 +235,11 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     }*/
 
     private void showUserDetailDialo(View view) {
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = deviceToConnected.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+        ((DeviceActionListener) getActivity()).connect(config);
+
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                 view.getContext(), R.style.BottomSheetDialogTheme);
         View bottomSheetView = LayoutInflater.from(view.getContext())

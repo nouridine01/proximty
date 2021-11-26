@@ -13,6 +13,7 @@ public class UserRepository {
 
     public UserRepository(Context context) {
         this.userDao = AppDatabase.getDatabase(context).userDao();
+
     }
 
     public User getConnectedUser(long id){

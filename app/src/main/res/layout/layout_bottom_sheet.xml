@@ -161,6 +161,47 @@
 
     </LinearLayout>
 
+    <GridLayout
+        android:id="@+id/grid_interet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Voyage"
+            android:layout_margin="5dp"
+            style="@style/ButtonInteret"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Voyage"
+            android:layout_margin="5dp"
+            style="@style/ButtonInteret"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Taximan"
+            style="@style/ButtonInteret"
+            android:layout_margin="5dp"
+            android:textSize="15sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Taximan"
+            style="@style/ButtonInteret"
+            />
+
+    </GridLayout>
+
     <Button
 
         android:layout_width="match_parent"

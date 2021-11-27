@@ -152,7 +152,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
             rippleBackground.startRippleAnimation();
             serveurMT.start();
             discover();
-            showUserDetailDialo(view);
+            //showUserDetailDialo(view);
         });
 
         // center button position

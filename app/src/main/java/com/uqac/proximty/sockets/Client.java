@@ -22,6 +22,8 @@ public class Client extends Thread{
 
 	private Context context;
 
+	//private boolean info
+
 
 	public Client(Socket serveur, Context context){
 		//this.client=client;
@@ -47,12 +49,12 @@ public class Client extends Thread{
 			//recup les donnees
 
 			os.write(ServeurMT.INFO.getBytes(StandardCharsets.UTF_8));
+
 			while (true){
 
 				System.out.println("nombre envoy�e au serveur");
 				String message = br.readLine();
 				Toast.makeText(context,"identifiant invalide",Toast.LENGTH_LONG).show();
-
 			}
 
 			

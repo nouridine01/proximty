@@ -33,7 +33,7 @@ public class ServeurMT extends Thread{
 	UserDao userDao;
 	public ServeurMT(Context context){
 		userRepository = new UserRepository(context);
-		prefManager = new PrefManager(context);
+		//prefManager = new PrefManager(context);
 		userDao=AppDatabase.getDatabase(context).userDao();
 	}
 	

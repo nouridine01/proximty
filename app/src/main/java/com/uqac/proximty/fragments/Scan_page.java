@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.location.LocationManager;
 
@@ -67,6 +68,10 @@ import com.uqac.proximty.sockets.ServeurMT;
 
 public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener {
 
+    public static String pseudo="";
+    public static ArrayList<String> interests=new ArrayList<>();
+    public static Bitmap image=null;
+
     private static final String TAG = "Scan";
     private static final int SEPRATION_DIST_THRESHOLD = 50;
 
@@ -75,11 +80,17 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     RippleBackground rippleBackground;
     ImageView centerDeviceIcon;
     ArrayList<Point> device_points = new ArrayList<>();
+    ArrayList<View> views = new ArrayList<>();
+
 
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     private WifiP2pDevice device;
 
     Map<String,Socket> sockets = new HashMap<String,Socket>();
+
+    private boolean scan = true;
+
+
 
     public List<WifiP2pDevice> getPeers() {
         return peers;
@@ -92,8 +103,9 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
 
     private WifiP2pDevice deviceToConnected;
     private WifiP2pInfo info;
+    private View deviceClickedView=null;
 
-    public ServeurMT serveurMT = new ServeurMT(getActivity());
+    public ServeurMT serveurMT;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,7 +124,9 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initialSetup(view);
+        scan = true;
     }
+
 
     public void discover() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -144,14 +158,20 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     }
 
     private void initialSetup(View view) {
+
+        serveurMT = new ServeurMT(getActivity());
         // layout files
         rippleBackground = (RippleBackground) view.findViewById(R.id.content);
         centerDeviceIcon = (ImageView) view.findViewById(R.id.centerImage);
         // add onClick Listeners
         centerDeviceIcon.setOnClickListener(v -> {
-            rippleBackground.startRippleAnimation();
-            serveurMT.start();
-            discover();
+            if(scan){
+                rippleBackground.startRippleAnimation();
+                serveurMT.start();
+                discover();
+                scan=false;
+            }
+
             //showUserDetailDialo(view);
         });
 
@@ -180,10 +200,14 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         if (info.groupFormed && info.isGroupOwner) {
             //comportement client
             try {
-                Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
-                Client client= new Client(serveur,getActivity());
-                client.start();
-            } catch (IOException e) {
+                Toast.makeText(getActivity(), "final step."+deviceClickedView.getId()+" "+info.groupOwnerAddress,
+                        Toast.LENGTH_SHORT).show();
+                /*Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
+                Client client= new Client(serveur,getActivity(),true);
+                client.start();*/
+                showUserDetailDialo(deviceClickedView);
+                //device_points.clear();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -234,11 +258,16 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
 
     }*/
 
-    private void showUserDetailDialo(View view) {
+    private void connect(View view){
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = deviceToConnected.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
+        deviceClickedView = view;
         ((DeviceActionListener) getActivity()).connect(config);
+
+    }
+
+    private void showUserDetailDialo(View view) {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                 view.getContext(), R.style.BottomSheetDialogTheme);
@@ -283,10 +312,11 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         device1.setOnClickListener(v -> {
             if(peers.size()>0){
                 deviceToConnected=peers.stream().filter(p->p.deviceName==device_name).findFirst().get();
+                Toast.makeText(getContext(), deviceToConnected.deviceName+" = "+deviceToConnected.deviceAddress, Toast.LENGTH_SHORT).show();
             }
-            showUserDetailDialo(device1);
-        });
+            connect(device1);
 
+        });
         device1.setVisibility(View.INVISIBLE);
         return device1;
     }
@@ -370,7 +400,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-
+        views.forEach(view -> rippleBackground.removeView(view));
         peers.clear();
         peers.addAll(peerList.getDeviceList());
 
@@ -379,8 +409,10 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
             return;
         }
 
+
         peers.forEach(p->{
             View tmp_device = createNewDevice(p.deviceName);
+            views.add(tmp_device);
             rippleBackground.addView(tmp_device);
             foundDevice(tmp_device);
         });

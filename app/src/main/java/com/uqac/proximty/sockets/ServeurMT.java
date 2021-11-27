@@ -1,8 +1,11 @@
 package com.uqac.proximty.sockets;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.uqac.proximty.PrefManager;
+import com.uqac.proximty.R;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.User;
@@ -10,6 +13,7 @@ import com.uqac.proximty.entities.UserWithInterests;
 import com.uqac.proximty.repositories.UserRepository;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,10 +35,12 @@ public class ServeurMT extends Thread{
 	private PrefManager prefManager;
 	AppDatabase appDatabase;
 	UserDao userDao;
+	Context context;
 	public ServeurMT(Context context){
 		userRepository = new UserRepository(context);
 		//prefManager = new PrefManager(context);
 		userDao=AppDatabase.getDatabase(context).userDao();
+		this.context=context;
 	}
 	
 	@Override
@@ -46,7 +52,7 @@ public class ServeurMT extends Thread{
 			while(true) {
 				Socket s = ss.accept();
 				++nb;
-				Conversation c = new Conversation(s,nb);
+				Conversation c = new Conversation(s,nb,context);
 				conversationList.add(c);
 				c.start();
 			}
@@ -61,6 +67,9 @@ public class ServeurMT extends Thread{
 		private Socket s;
 		private int num;
 		private String message ="";
+
+		Context context;
+
 
 
 
@@ -80,9 +89,10 @@ public class ServeurMT extends Thread{
 			this.message = message;
 		}
 
-		Conversation(Socket s,int n){
+		Conversation(Socket s,int n,Context context){
 			this.s=s;
 			num=n;
+			this.context=context;
 		}
 		@Override
 		public void run() {
@@ -103,7 +113,16 @@ public class ServeurMT extends Thread{
 					if(br.readLine().equals(INFO)){
 						User user=userRepository.getConnectedUser(1);//prefManager.getUserId()
 						os.write(user.getPseudo().getBytes(StandardCharsets.UTF_8));
-						os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement
+						//os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement
+						Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
+								R.drawable.profil);
+						ByteArrayOutputStream stream = new ByteArrayOutputStream();
+						bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+						byte[] byteArray = stream.toByteArray();
+						os.write(byteArray.length);
+						os.write(byteArray);
+						bmp.recycle();
+
 						UserWithInterests userWithInterests = userDao.getUserWithInterests(user.getUid());
 						os.write(userWithInterests.interests.size());
 						userWithInterests.interests.forEach(interest -> {

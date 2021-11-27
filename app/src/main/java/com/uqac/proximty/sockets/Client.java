@@ -3,6 +3,8 @@ package com.uqac.proximty.sockets;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.uqac.proximty.fragments.Scan_page;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,13 +24,16 @@ public class Client extends Thread{
 
 	private Context context;
 
-	//private boolean info
+	private boolean info =false;
 
 
-	public Client(Socket serveur, Context context){
+
+
+	public Client(Socket serveur, Context context, boolean info){
 		//this.client=client;
 		this.serveur=serveur;
 		this.context=context;
+		this.info=info;
 	}
 
 
@@ -46,9 +51,28 @@ public class Client extends Thread{
 
 			OutputStream os = serveur.getOutputStream();
 			PrintWriter pw = new PrintWriter(os,true);
-			//recup les donnees
 
-			os.write(ServeurMT.INFO.getBytes(StandardCharsets.UTF_8));
+			if(info==true){
+
+				//recup les donnees
+				os.write(ServeurMT.INFO.getBytes(StandardCharsets.UTF_8));
+				String pseudo = br.readLine();
+				Scan_page.pseudo=pseudo;
+				int bytesize=is.read();
+				byte[] byteArray = new byte[bytesize];
+				is.read(byteArray);
+				int size = is.read();
+				Scan_page.interests.clear();
+				for (int i=0;i<size;i++){
+					String interest= br.readLine();
+					Scan_page.interests.add(interest);
+				}
+
+				//retrieve image after
+
+				return ;
+			}
+
 
 			while (true){
 

@@ -71,6 +71,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     public static String pseudo="";
     public static ArrayList<String> interests=new ArrayList<>();
     public static Bitmap image=null;
+    public static View bottomSheetView;
 
     private static final String TAG = "Scan";
     private static final int SEPRATION_DIST_THRESHOLD = 50;
@@ -271,7 +272,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                 view.getContext(), R.style.BottomSheetDialogTheme);
-        View bottomSheetView = LayoutInflater.from(view.getContext())
+        bottomSheetView = LayoutInflater.from(view.getContext())
                 .inflate(R.layout.layout_bottom_sheet,
                         (LinearLayout)view.findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {

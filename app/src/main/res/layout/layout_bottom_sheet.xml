@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/photo"

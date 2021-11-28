@@ -1,8 +1,11 @@
 package com.uqac.proximty.sockets;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.Toast;
 
+import com.uqac.proximty.R;
 import com.uqac.proximty.fragments.Scan_page;
 
 import java.io.BufferedReader;
@@ -58,8 +61,8 @@ public class Client extends Thread{
 				os.write(ServeurMT.INFO.getBytes(StandardCharsets.UTF_8));
 				String pseudo = br.readLine();
 				Scan_page.pseudo=pseudo;
-				int bytesize=is.read();
-				byte[] byteArray = new byte[bytesize];
+				int byteSize=is.read();
+				byte[] byteArray = new byte[byteSize];
 				is.read(byteArray);
 				int size = is.read();
 				Scan_page.interests.clear();
@@ -69,7 +72,10 @@ public class Client extends Thread{
 				}
 
 				//retrieve image after
+				byte[] byteArrayBitmap = new byte[is.read()];
+				Bitmap bitmap = BitmapFactory.decodeByteArray(byteArrayBitmap, 0, byteArrayBitmap.length);
 
+				//Scan_page.bottomSheetView.findViewById(R.id.);
 				return ;
 			}
 

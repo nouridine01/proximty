@@ -111,6 +111,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //DatabaseReference databaseReference=firebaseDatabase.getReference().child("chats").child(senderroom).child("messages");
 
+
         messagesAdapter=new MessagesAdapter(ChatActivity.this,messagesArrayList);
 
         Messages messages=new Messages("hello","01",3,"10h22");
@@ -156,7 +157,8 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-        mnameofspecificuser.setText(mrecievername);
+        //mnameofspecificuser.setText(mrecievername);
+        mnameofspecificuser.setText("Youssef Zeus");
         //String uri=intent.getStringExtra("imageuri");
         //String uri=intent.getStringExtra("imageuri");
         if(false)

@@ -31,12 +31,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.skyfishjy.library.RippleBackground;
 import com.uqac.proximty.R;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.activities.ChatActivity;
+import com.uqac.proximty.entities.Interest;
+import com.uqac.proximty.entities.UserWithInterests;
+
+import org.w3c.dom.Text;
 
 //https://github.com/barmangolap15/Android-Bottom-Sheet-Dialog-Java-Android-Studio
 
@@ -133,35 +140,54 @@ public class Scan_page extends Fragment implements View.OnClickListener {
             }
         }, 5000);
 
-        showUserDetailDialo(view);
+
+        UserWithInterests userTem = new UserWithInterests();
+        //TODO Faire la requete ici pour recuper les information du user et le passer a la metode
+        showUserDetailDialo(view,userTem);
 
     }
 
-    private void showUserDetailDialo(View view) {
+    private void showUserDetailDialo(View view,UserWithInterests userAnonym) {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                 view.getContext(), R.style.BottomSheetDialogTheme);
         View bottomSheetView = LayoutInflater.from(view.getContext())
                 .inflate(R.layout.layout_bottom_sheet,
                         (LinearLayout)view.findViewById(R.id.bottomSheetContainer));
-        bottomSheetView.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.imageViewCancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Shared!!!", Toast.LENGTH_SHORT).show();
                 bottomSheetDialog.dismiss();
             }
         });
 
-        bottomSheetView.findViewById(R.id.sendmessage).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.imageViewConfirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO:: ENvoyer à ce niveau la demande de correspondance
                 startActivity(new Intent(view.getContext(), ChatActivity.class));
             }
         });
-
+        RoundedImageView imageAnonyme = bottomSheetView.findViewById(R.id.imageProfil);
+        TextView txtUserPseudo = bottomSheetView.findViewById(R.id.txtNameAnonym);
         GridLayout gridLayoutInterte = bottomSheetView.findViewById(R.id.grid_interet);
-        TextView textInteret=  new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
-        textInteret.setText("programmaticaly");
-        gridLayoutInterte.addView(textInteret);
+
+        if (userAnonym!= null && userAnonym.user!=null){
+            txtUserPseudo.setText(userAnonym.user.getPseudo());
+            List<Interest> interests = userAnonym.interests;
+            for (Interest interet:interests) {
+                TextView textInteret = new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
+                textInteret.setText(interet.getName());
+                gridLayoutInterte.addView(textInteret);
+            }
+        }else {
+            txtUserPseudo.setText("King of dead");
+            TextView textInteret1 = new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
+            textInteret1.setText("Photographie");
+            TextView textInteret2 = new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
+            textInteret2.setText("Voyage");
+            gridLayoutInterte.addView(textInteret1);
+            gridLayoutInterte.addView(textInteret2);
+        }
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
     }

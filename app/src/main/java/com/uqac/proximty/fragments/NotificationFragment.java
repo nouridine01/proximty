@@ -2,13 +2,22 @@ package com.uqac.proximty.fragments;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.skyfishjy.library.RippleBackground;
 import com.uqac.proximty.R;
+import com.uqac.proximty.adaptaters.NotificationAdapter;
+import com.uqac.proximty.entities.MNotification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +34,7 @@ public class NotificationFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -61,6 +71,31 @@ public class NotificationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_notification, container, false);
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initialSetup(view);
+    }
+
+    private void initialSetup(View view) {
+        RecyclerView  notificationRecycle=  view.findViewById(R.id.notificationContact);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
+        notificationRecycle.setLayoutManager(linearLayoutManager); // s
+
+        List<MNotification> notificationList = new ArrayList<>();
+        notificationList.add(new MNotification("niki","rnie.png"));
+        notificationList.add(new MNotification("miki","rnie.png"));
+        MNotification mn=new MNotification("Dada Kmaog","rnie.png");
+        mn.setAccepted(true);
+        mn.setPending(true);
+        notificationList.add(mn);
+        NotificationAdapter customAdapter = new NotificationAdapter(notificationList);
+        notificationRecycle.setAdapter(customAdapter); // set the Adapter to RecyclerView
+
+    }
+
 }

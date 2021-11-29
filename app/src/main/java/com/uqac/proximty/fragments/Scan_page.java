@@ -201,22 +201,27 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         if (info.groupFormed && info.isGroupOwner) {
             //comportement client
             try {
+
+                Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
+                Client client= new Client(serveur,getActivity(),true);
                 Toast.makeText(getActivity(), "final step."+deviceClickedView.getId()+" "+info.groupOwnerAddress,
                         Toast.LENGTH_SHORT).show();
-                /*Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
-                Client client= new Client(serveur,getActivity(),true);
-                client.start();*/
+                client.start();
+
                 showUserDetailDialo(deviceClickedView);
+
                 //device_points.clear();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            finally {
+                ((DeviceActionListener) getActivity()).disconnect();
             }
 
         } else if (info.groupFormed) {
            //serveur comportement
 
         }
-
     }
 
     void checkLocationEnabled(){

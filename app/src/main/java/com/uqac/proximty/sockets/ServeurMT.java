@@ -3,6 +3,7 @@ package com.uqac.proximty.sockets;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Toast;
 
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
@@ -36,6 +37,7 @@ public class ServeurMT extends Thread{
 	AppDatabase appDatabase;
 	UserDao userDao;
 	Context context;
+
 	public ServeurMT(Context context){
 		userRepository = new UserRepository(context);
 		//prefManager = new PrefManager(context);
@@ -107,10 +109,11 @@ public class ServeurMT extends Thread{
 
 					OutputStream os = s.getOutputStream();
 					PrintWriter pw = new PrintWriter(os,true);
-
+					Toast.makeText(context,"conv lancee",Toast.LENGTH_LONG).show();
 
 					//tranmission des info perso du profil envoi du non pseudo et interet
-					if(br.readLine().equals(INFO)){
+					String lineread = br.readLine();
+					if(lineread.equals(INFO)){
 						User user=userRepository.getConnectedUser(1);//prefManager.getUserId()
 						os.write(user.getPseudo().getBytes(StandardCharsets.UTF_8));
 						//os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement

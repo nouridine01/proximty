@@ -110,9 +110,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 // we are connected with the other device, request connection
                 // info to find group owner IP
 
-                /*DeviceDetailFragment fragment = (DeviceDetailFragment) activity
-                        .getFragmentManager().findFragmentById(R.id.frag_detail);
-                manager.requestConnectionInfo(channel, fragment);*/
+                Scan_page fragment = (Scan_page) activity.getAdapter().getItem(0);
+                manager.requestConnectionInfo(channel, fragment);
             } else {
                 // It's a disconnect
                 activity.resetData();

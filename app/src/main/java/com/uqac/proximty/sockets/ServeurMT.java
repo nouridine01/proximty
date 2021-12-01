@@ -54,9 +54,17 @@ public class ServeurMT extends Thread{
 			while(true) {
 				Socket s = ss.accept();
 				++nb;
-				Conversation c = new Conversation(s,nb,context);
-				conversationList.add(c);
-				c.start();
+				InputStream is = s.getInputStream();
+
+				String ip = s.getRemoteSocketAddress().toString();
+				Toast.makeText(context,"conv lancee : "+"connexion du client "+ip,Toast.LENGTH_LONG).show();
+
+
+				OutputStream os = s.getOutputStream();
+				os.write("success".getBytes(StandardCharsets.UTF_8));
+				//Conversation c = new Conversation(s,nb,context);
+				//conversationList.add(c);
+				//c.start();
 			}
 			
 		} catch (IOException e) {
@@ -108,7 +116,6 @@ public class ServeurMT extends Thread{
 					System.out.println("connexion du client "+ip);
 
 					OutputStream os = s.getOutputStream();
-					PrintWriter pw = new PrintWriter(os,true);
 					Toast.makeText(context,"conv lancee",Toast.LENGTH_LONG).show();
 
 					//tranmission des info perso du profil envoi du non pseudo et interet

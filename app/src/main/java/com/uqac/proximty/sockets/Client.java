@@ -53,9 +53,9 @@ public class Client extends Thread{
 			BufferedReader br = new BufferedReader(isr);
 
 			OutputStream os = serveur.getOutputStream();
-			PrintWriter pw = new PrintWriter(os,true);
-
-			if(info==true){
+			String msg = br.readLine();
+			Toast.makeText(context,"message = " + msg,Toast.LENGTH_LONG).show();
+			/*if(info==true){
 
 				//recup les donnees
 				os.write(ServeurMT.INFO.getBytes(StandardCharsets.UTF_8));
@@ -88,7 +88,7 @@ public class Client extends Thread{
 				System.out.println("nombre envoy�e au serveur");
 				String message = br.readLine();
 				//Toast.makeText(context,"identifiant invalide",Toast.LENGTH_LONG).show();
-			}
+			}*/
 
 			
 			

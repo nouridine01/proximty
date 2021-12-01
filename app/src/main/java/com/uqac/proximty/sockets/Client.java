@@ -60,17 +60,17 @@ public class Client extends Thread{
 				//recup les donnees
 				os.write(ServeurMT.INFO.getBytes(StandardCharsets.UTF_8));
 				String pseudo = br.readLine();
-				Toast.makeText(context,"pseudo = " + pseudo,Toast.LENGTH_LONG).show();
+				//Toast.makeText(context,"pseudo = " + pseudo,Toast.LENGTH_LONG).show();
 				Scan_page.pseudo=pseudo;
 				int byteSize=is.read();
-				Toast.makeText(context,"byteSize = " + byteSize,Toast.LENGTH_LONG).show();
+				//Toast.makeText(context,"byteSize = " + byteSize,Toast.LENGTH_LONG).show();
 				byte[] byteArray = new byte[byteSize];
 				is.read(byteArray);
 				int size = is.read();
 				Scan_page.interests.clear();
 				for (int i=0;i<size;i++){
 					String interest= br.readLine();
-					Toast.makeText(context,"interest " + interest + " added",Toast.LENGTH_LONG).show();
+					//Toast.makeText(context,"interest " + interest + " added",Toast.LENGTH_LONG).show();
 					Scan_page.interests.add(interest);
 				}
 
@@ -87,7 +87,7 @@ public class Client extends Thread{
 
 				System.out.println("nombre envoy�e au serveur");
 				String message = br.readLine();
-				Toast.makeText(context,"identifiant invalide",Toast.LENGTH_LONG).show();
+				//Toast.makeText(context,"identifiant invalide",Toast.LENGTH_LONG).show();
 			}
 
 			

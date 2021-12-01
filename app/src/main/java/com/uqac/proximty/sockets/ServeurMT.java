@@ -155,6 +155,12 @@ public class ServeurMT extends Thread{
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}finally {
+					try {
+						s.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 
 		}

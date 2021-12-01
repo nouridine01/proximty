@@ -173,7 +173,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 scan=false;
             }
 
-            //showUserDetailDialo(view);
+            showUserDetailDialo(view);
         });
 
         // center button position
@@ -199,28 +199,23 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         // server. The file server is single threaded, single connection server
         // socket.
         if (info.groupFormed && info.isGroupOwner) {
+            Toast.makeText(getActivity(), "final step. client "+info.groupOwnerAddress, Toast.LENGTH_SHORT).show();
             //comportement client
+            Socket serveur = null;
+            //showUserDetailDialo(deviceClickedView);
             try {
-
-                Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
-                Client client= new Client(serveur,getActivity(),true);
-                Toast.makeText(getActivity(), "final step."+deviceClickedView.getId()+" "+info.groupOwnerAddress,
-                        Toast.LENGTH_SHORT).show();
-                client.start();
-
-                showUserDetailDialo(deviceClickedView);
-
-                //device_points.clear();
-            } catch (Exception e) {
+                serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            finally {
-                ((DeviceActionListener) getActivity()).disconnect();
-            }
+            Client client= new Client(serveur,getActivity(),true);
+
+            //client.start();*/
+
 
         } else if (info.groupFormed) {
-           //serveur comportement
 
+            Toast.makeText(getActivity(), "final step. server", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -280,7 +275,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         bottomSheetView = LayoutInflater.from(view.getContext())
                 .inflate(R.layout.layout_bottom_sheet,
                         (LinearLayout)view.findViewById(R.id.bottomSheetContainer));
-        bottomSheetView.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.imageViewCancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(), "Shared!!!" +view.getId(), Toast.LENGTH_SHORT).show();
@@ -288,7 +283,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
             }
         });
 
-        bottomSheetView.findViewById(R.id.sendmessage).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.imageViewConfirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(view.getContext(), ChatActivity.class));

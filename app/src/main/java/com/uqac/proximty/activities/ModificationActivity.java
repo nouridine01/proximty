@@ -53,8 +53,6 @@ public class ModificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modification);
-
-
         prefManager = new PrefManager(this);
         userRepository = new UserRepository(this);
         user = userRepository.getConnectedUser(prefManager.getUserId());

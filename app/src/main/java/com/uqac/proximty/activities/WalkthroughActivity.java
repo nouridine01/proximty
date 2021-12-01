@@ -196,10 +196,10 @@ public class WalkthroughActivity extends AppCompatActivity {
         //userFriendCrossRefDao.insertUserFriendCrossRef(userFriendCrossRef);*/
 
         //attribute interest
-        UserInterestCrossRef userInterestCrossRef=new UserInterestCrossRef();
+        /*UserInterestCrossRef userInterestCrossRef=new UserInterestCrossRef();
         userInterestCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
         userInterestCrossRef.setId(interestDao.getInterestByName("Lecture").getId());
-        userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);
+        userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);*/
 
 
         /*List<User> list=new ArrayList<>();

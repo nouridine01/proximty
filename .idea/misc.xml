@@ -20,10 +20,13 @@
         <entry key="..\:/Users/nouri/AndroidStudioProjects/proximty/app/src/main/res/layout/welcome_slide1.xml" value="0.12760416666666666" />
         <entry key="..\:/Users/nouri/AndroidStudioProjects/proximty/app/src/main/res/layout/welcome_slide2.xml" value="0.12760416666666666" />
         <entry key="..\:/Users/nouri/AndroidStudioProjects/proximty/app/src/main/res/layout/welcome_slide3.xml" value="0.12760416666666666" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.20925925925925926" />
         <entry key="app/src/main/res/drawable/bottom_sheet_back.xml" value="0.13645833333333332" />
         <entry key="app/src/main/res/drawable/button_back.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/drawable/button_interet.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_forward_24.xml" value="0.13645833333333332" />
+        <entry key="app/src/main/res/drawable/ic_baseline_message_24.xml" value="0.13645833333333332" />
+        <entry key="app/src/main/res/drawable/ic_login_button.xml" value="0.20925925925925926" />
         <entry key="app/src/main/res/drawable/messagebackground.xml" value="0.13645833333333332" />
         <entry key="app/src/main/res/drawable/onboarding_button.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/drawable/onboarding_dot_selected.xml" value="0.21666666666666667" />
@@ -34,11 +37,13 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/activity_users.xml" value="0.1671195652173913" />
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.1671195652173913" />
+        <entry key="app/src/main/res/layout/item_contact.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_bottom_sheet.xml" value="0.28077455048409405" />
         <entry key="app/src/main/res/layout/modal_bottom_sheet.xml" value="0.1203125" />
         <entry key="app/src/main/res/layout/recieverchatlayout.xml" value="0.1947463768115942" />
         <entry key="app/src/main/res/layout/rowNotiflayout.xml" value="0.1671195652173913" />
         <entry key="app/src/main/res/layout/rownotiflayout.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/rownotiflayoutaccepted.xml" value="0.1" />
         <entry key="app/src/main/res/layout/rownotiflayoutpending.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/senderchatlayout.xml" value="0.1947463768115942" />
       </map>

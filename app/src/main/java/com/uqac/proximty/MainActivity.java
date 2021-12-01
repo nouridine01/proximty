@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         int[] tabIcons = {
                 R.drawable.scan,
-                R.drawable.email,
+                R.drawable.ic_baseline_message_24,
                 R.drawable.notification,
                 R.drawable.user
         };

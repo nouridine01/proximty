@@ -1,143 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_bk"
     tools:context=".fragments.ProfilFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_marginTop="32dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <Button
-            android:id="@+id/modifPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Modifier"
-            app:layout_constraintBottom_toTopOf="@+id/prenom"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/photo"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
+        <TextView
             android:id="@+id/prenom"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:text="Prenom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/photo" />
 
-        <EditText
+        <TextView
             android:id="@+id/nom"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:text="Nom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/prenom" />
 
-        <EditText
+        <TextView
             android:id="@+id/pseudo"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:text="Pseudo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nom" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:text="**********"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pseudo" />
-
         <TextView
-            android:id="@+id/interetsTitre"
+            android:id="@+id/interestText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:text="Centres d'intérêts"
             android:textSize="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintTop_toBottomOf="@+id/pseudo" />
 
-        <TableLayout
-            android:id="@+id/interets"
+
+        <com.uqac.proximty.models.FlowLayout
+            android:id="@+id/interests"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/interetsTitre">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/exemple"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:text="Lecture" />
-
-                <ImageButton
-                    android:id="@+id/addInteret"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:srcCompat="@android:drawable/ic_menu_add" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </TableLayout>
+            app:layout_constraintTop_toBottomOf="@+id/interestText" />
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/modify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Sauvegarder"
+            android:text="Modifier"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/interets" />
+            app:layout_constraintTop_toBottomOf="@+id/interests" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</ScrollView>

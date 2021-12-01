@@ -142,7 +142,7 @@ public class WalkthroughActivity extends AppCompatActivity {
         userFriendCrossRefDao=AppDatabase.getDatabase(this).userFriendCrossRefDao();
         userInterestCrossRefDao=AppDatabase.getDatabase(this).userInterestCrossRefDao();
         // insertion users
-        User u = new User();
+        /*User u = new User();
         u.setLastName("nouridine");
         u.setFirstName("oumarou");
         u.setPseudo("noor");
@@ -153,14 +153,41 @@ public class WalkthroughActivity extends AppCompatActivity {
         u2.setFirstName("oumar");
         u2.setPseudo("bili");
         u.setPassword("123");
-        userDao.insertUsers(u,u2);
+        userDao.insertUsers(u,u2);*/
 
         //insertion interest
         Interest t1 = new Interest();
         t1.setName("Lecture");
         Interest t2 = new Interest();
-        t2.setName("Soccer");
-        interestDao.insertInterests(t1,t2);
+        t2.setName("Sport");
+        Interest t3 = new Interest();
+        t3.setName("Jeu Vidéo");
+        Interest t4 = new Interest();
+        t4.setName("Voyage");
+        Interest t5 = new Interest();
+        t5.setName("Cinéma & Séries");
+        Interest t6 = new Interest();
+        t6.setName("Cuisine");
+        Interest t7 = new Interest();
+        t7.setName("Sciences");
+        Interest t8 = new Interest();
+        t8.setName("Politique");
+        Interest t9 = new Interest();
+        t9.setName("Mode");
+        Interest t10 = new Interest();
+        t10.setName("Soirées");
+        Interest t11 = new Interest();
+        t11.setName("Photographie");
+        Interest t12 = new Interest();
+        t12.setName("Danse");
+        Interest t13 = new Interest();
+        t13.setName("Théâtre");
+        Interest t14 = new Interest();
+        t14.setName("Arts");
+        Interest t15 = new Interest();
+        t15.setName("Bien-être & santé");
+
+        interestDao.insertInterests(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15);
 
         /*//creation friend
         UserFriendCrossRef userFriendCrossRef = new UserFriendCrossRef();
@@ -169,10 +196,10 @@ public class WalkthroughActivity extends AppCompatActivity {
         //userFriendCrossRefDao.insertUserFriendCrossRef(userFriendCrossRef);*/
 
         //attribute interest
-        UserInterestCrossRef userInterestCrossRef=new UserInterestCrossRef();
+        /*UserInterestCrossRef userInterestCrossRef=new UserInterestCrossRef();
         userInterestCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
         userInterestCrossRef.setId(interestDao.getInterestByName("Lecture").getId());
-        userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);
+        userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);*/
 
 
         /*List<User> list=new ArrayList<>();

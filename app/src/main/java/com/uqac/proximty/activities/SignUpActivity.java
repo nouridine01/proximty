@@ -63,6 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
         u.setLastName(lastName);
         u.setFirstName(firstName);
         u.setPseudo(pseudo);
+        u.setPhoto("default_profile_pic");
         if(password.equals(confirmPassword)){
             u.setPassword(password);
             userDao.insertUsers(u);

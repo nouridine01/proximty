@@ -1,16 +1,29 @@
 package com.uqac.proximty.fragments;
 
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.location.LocationManager;
+
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.p2p.WifiP2pManager;
+
 import android.os.Build;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -28,26 +41,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.core.app.ActivityCompat;
+
 import androidx.core.widget.TextViewCompat;
+
 import androidx.fragment.app.Fragment;
 
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.skyfishjy.library.RippleBackground;
+import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.R;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.activities.ChatActivity;
-import com.uqac.proximty.entities.Interest;
-import com.uqac.proximty.entities.UserWithInterests;
+import com.uqac.proximty.sockets.Client;
+import com.uqac.proximty.sockets.ServeurMT;
 
-import org.w3c.dom.Text;
 
-//https://github.com/barmangolap15/Android-Bottom-Sheet-Dialog-Java-Android-Studio
+public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener {
 
-public class Scan_page extends Fragment implements View.OnClickListener {
+    public static String pseudo="";
+    public static ArrayList<String> interests=new ArrayList<>();
+    public static Bitmap image=null;
+    public static View bottomSheetView;
 
     private static final String TAG = "Scan";
     private static final int SEPRATION_DIST_THRESHOLD = 50;
@@ -57,9 +81,32 @@ public class Scan_page extends Fragment implements View.OnClickListener {
     RippleBackground rippleBackground;
     ImageView centerDeviceIcon;
     ArrayList<Point> device_points = new ArrayList<>();
+    ArrayList<View> views = new ArrayList<>();
+
+
+    private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+    private WifiP2pDevice device;
+
+    Map<String,Socket> sockets = new HashMap<String,Socket>();
+
+    private boolean scan = true;
 
 
 
+    public List<WifiP2pDevice> getPeers() {
+        return peers;
+    }
+
+    public void setPeers(List<WifiP2pDevice> peers) {
+        this.peers = peers;
+    }
+
+
+    private WifiP2pDevice deviceToConnected;
+    private WifiP2pInfo info;
+    private View deviceClickedView=null;
+
+    public ServeurMT serveurMT;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,21 +118,63 @@ public class Scan_page extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate  (savedInstanceState);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initialSetup(view);
+        scan = true;
+    }
+
+
+    public void discover() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        MainActivity activity= (MainActivity) getActivity();
+        activity.getManager().discoverPeers(activity.getChannel(), new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getActivity(), "Discovery Initiated",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+                Toast.makeText(getActivity(), "Discovery Failed : " + reasonCode,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initialSetup(View view) {
+
+        serveurMT = new ServeurMT(getActivity());
         // layout files
         rippleBackground = (RippleBackground) view.findViewById(R.id.content);
         centerDeviceIcon = (ImageView) view.findViewById(R.id.centerImage);
         // add onClick Listeners
-        centerDeviceIcon.setOnClickListener(this);
+        centerDeviceIcon.setOnClickListener(v -> {
+            if(scan){
+                rippleBackground.startRippleAnimation();
+                serveurMT.start();
+                discover();
+                scan=false;
+            }
+
+            //showUserDetailDialo(view);
+        });
 
         // center button position
         Display display = getActivity().getWindowManager(). getDefaultDisplay();
@@ -96,6 +185,43 @@ public class Scan_page extends Fragment implements View.OnClickListener {
 
         Log.d("MainActivity", size.x + "  " + size.y);
 
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+
+        this.info = info;
+
+
+        // The owner IP is now known.
+
+        // After the group negotiation, we assign the group owner as the file
+        // server. The file server is single threaded, single connection server
+        // socket.
+        if (info.groupFormed && info.isGroupOwner) {
+            //comportement client
+            try {
+
+                Socket serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
+                Client client= new Client(serveur,getActivity(),true);
+                Toast.makeText(getActivity(), "final step."+deviceClickedView.getId()+" "+info.groupOwnerAddress,
+                        Toast.LENGTH_SHORT).show();
+                client.start();
+
+                showUserDetailDialo(deviceClickedView);
+
+                //device_points.clear();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                ((DeviceActionListener) getActivity()).disconnect();
+            }
+
+        } else if (info.groupFormed) {
+           //serveur comportement
+
+        }
     }
 
     void checkLocationEnabled(){
@@ -127,70 +253,56 @@ public class Scan_page extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
+    /*@Override
     public void onClick(View view) {
+
+
+
         rippleBackground.startRippleAnimation();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                View tmp_device = createNewDevice("device" + device_count);
-                rippleBackground.addView(tmp_device);
-                foundDevice(tmp_device);
-            }
-        }, 5000);
+        discover();
 
+    }*/
 
-        UserWithInterests userTem = new UserWithInterests();
-        //TODO Faire la requete ici pour recuper les information du user et le passer a la metode
-        showUserDetailDialo(view,userTem);
+    private void connect(View view){
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = deviceToConnected.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+        deviceClickedView = view;
+        ((DeviceActionListener) getActivity()).connect(config);
 
     }
 
-    private void showUserDetailDialo(View view,UserWithInterests userAnonym) {
+    private void showUserDetailDialo(View view) {
+
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                 view.getContext(), R.style.BottomSheetDialogTheme);
-        View bottomSheetView = LayoutInflater.from(view.getContext())
+        bottomSheetView = LayoutInflater.from(view.getContext())
                 .inflate(R.layout.layout_bottom_sheet,
                         (LinearLayout)view.findViewById(R.id.bottomSheetContainer));
-        bottomSheetView.findViewById(R.id.imageViewCancel).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(view.getContext(), "Shared!!!" +view.getId(), Toast.LENGTH_SHORT).show();
                 bottomSheetDialog.dismiss();
             }
         });
 
-        bottomSheetView.findViewById(R.id.imageViewConfirm).setOnClickListener(new View.OnClickListener() {
+        bottomSheetView.findViewById(R.id.sendmessage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:: ENvoyer à ce niveau la demande de correspondance
                 startActivity(new Intent(view.getContext(), ChatActivity.class));
             }
         });
-        RoundedImageView imageAnonyme = bottomSheetView.findViewById(R.id.imageProfil);
-        TextView txtUserPseudo = bottomSheetView.findViewById(R.id.txtNameAnonym);
-        GridLayout gridLayoutInterte = bottomSheetView.findViewById(R.id.grid_interet);
 
-        if (userAnonym!= null && userAnonym.user!=null){
-            txtUserPseudo.setText(userAnonym.user.getPseudo());
-            List<Interest> interests = userAnonym.interests;
-            for (Interest interet:interests) {
-                TextView textInteret = new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
-                textInteret.setText(interet.getName());
-                gridLayoutInterte.addView(textInteret);
-            }
-        }else {
-            txtUserPseudo.setText("King of dead");
-            TextView textInteret1 = new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
-            textInteret1.setText("Photographie");
-            TextView textInteret2 = new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
-            textInteret2.setText("Voyage");
-            gridLayoutInterte.addView(textInteret1);
-            gridLayoutInterte.addView(textInteret2);
-        }
+        GridLayout gridLayoutInterte = bottomSheetView.findViewById(R.id.grid_interet);
+        TextView textInteret=  new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
+        textInteret.setText("programmaticaly");
+        gridLayoutInterte.addView(textInteret);
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
     }
+
 
     public View createNewDevice(String device_name){
         View device1 = LayoutInflater.from(this.getActivity()).inflate(R.layout.device_icon, null);
@@ -203,8 +315,14 @@ public class Scan_page extends Fragment implements View.OnClickListener {
         int device_id = (int)System.currentTimeMillis() + device_count++;
         txt_device1.setText(device_name);
         device1.setId(device_id);
-        device1.setOnClickListener(this);
+        device1.setOnClickListener(v -> {
+            if(peers.size()>0){
+                deviceToConnected=peers.stream().filter(p->p.deviceName==device_name).findFirst().get();
+                Toast.makeText(getContext(), deviceToConnected.deviceName+" = "+deviceToConnected.deviceAddress, Toast.LENGTH_SHORT).show();
+            }
+            connect(device1);
 
+        });
         device1.setVisibility(View.INVISIBLE);
         return device1;
     }
@@ -258,5 +376,72 @@ public class Scan_page extends Fragment implements View.OnClickListener {
             }
         }
         return false;
+    }
+
+    //------------------------------------------------
+    public WifiP2pDevice getDevice() {
+        return device;
+    }
+
+    private static String getDeviceStatus(int deviceStatus) {
+        Log.d(MainActivity.TAG, "Peer status :" + deviceStatus);
+        switch (deviceStatus) {
+            case WifiP2pDevice.AVAILABLE:
+                return "Available";
+            case WifiP2pDevice.INVITED:
+                return "Invited";
+            case WifiP2pDevice.CONNECTED:
+                return "Connected";
+            case WifiP2pDevice.FAILED:
+                return "Failed";
+            case WifiP2pDevice.UNAVAILABLE:
+                return "Unavailable";
+            default:
+                return "Unknown";
+
+        }
+    }
+
+
+
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peerList) {
+        views.forEach(view -> rippleBackground.removeView(view));
+        peers.clear();
+        peers.addAll(peerList.getDeviceList());
+
+        if (peers.size() == 0) {
+            Log.d(MainActivity.TAG, "No devices found");
+            return;
+        }
+
+
+        peers.forEach(p->{
+            View tmp_device = createNewDevice(p.deviceName);
+            views.add(tmp_device);
+            rippleBackground.addView(tmp_device);
+            foundDevice(tmp_device);
+        });
+
+    }
+
+    public void clearPeers() {
+        peers.clear();
+        //((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+    }
+
+    /**
+     * An interface-callback for the activity to listen to fragment interaction
+     * events.
+     */
+    public interface DeviceActionListener {
+
+        void showDetails(WifiP2pDevice device);
+
+        void cancelDisconnect();
+
+        void connect(WifiP2pConfig config);
+
+        void disconnect();
     }
 }

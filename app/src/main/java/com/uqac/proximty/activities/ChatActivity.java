@@ -184,6 +184,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 else
                 {
+                    Toast.makeText(getApplicationContext(),enteredmessage,Toast.LENGTH_SHORT).show();
                     /**
 
                     Date date=new Date();
@@ -232,7 +233,6 @@ public class ChatActivity extends AppCompatActivity {
             messagesAdapter.notifyDataSetChanged();
         }
     }
-
 }
 
 /**

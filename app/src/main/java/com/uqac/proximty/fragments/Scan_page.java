@@ -53,12 +53,15 @@ import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.R;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.activities.ChatActivity;
@@ -171,6 +174,8 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 serveurMT.start();
                 discover();
                 scan=false;
+
+                Toast.makeText(getActivity(),  Settings.Global.getString(getActivity().getContentResolver(), "device_name"), Toast.LENGTH_SHORT).show();
             }
 
             showUserDetailDialo(view);
@@ -439,4 +444,6 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
 
         void disconnect();
     }
+
+
 }

@@ -20,6 +20,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ import com.uqac.proximty.fragments.Contact_page;
 import com.uqac.proximty.models.Contact;
 import com.uqac.proximty.repositories.UserRepository;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,6 +171,46 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
 
 
         //initialisation();
+
+    }
+
+    public void setDeviceName(String devName) {
+        try {
+            Class[] paramTypes = new Class[3];
+            paramTypes[0] = WifiP2pManager.Channel.class;
+            paramTypes[1] = String.class;
+            paramTypes[2] = WifiP2pManager.ActionListener.class;
+            Method setDeviceName = manager.getClass().getMethod(
+                    "setDeviceName", paramTypes);
+            setDeviceName.setAccessible(true);
+
+            Object arglist[] = new Object[3];
+            arglist[0] = channel;
+            arglist[1] = devName;
+            arglist[2] = new WifiP2pManager.ActionListener() {
+
+                @Override
+                public void onSuccess() {
+                    System.out.println("setDeviceName succeeded");
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    System.out.println("setDeviceName failed");
+                }
+            };
+
+            setDeviceName.invoke(manager, arglist);
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
 
     }
 

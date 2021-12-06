@@ -14,6 +14,8 @@ package com.uqac.proximty.entities;
 public class MNotification {
     private String id;
     private String pseudo;
+    private String senderId;
+    private String receverId;
     private String image;
     private boolean accepted = false;
     private boolean pending = true;

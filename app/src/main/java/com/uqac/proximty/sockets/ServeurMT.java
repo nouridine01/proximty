@@ -66,10 +66,12 @@ public class ServeurMT extends Thread{
 				//conversationList.add(c);
 				//c.start();
 			}
+
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
 		}
 	}
 	

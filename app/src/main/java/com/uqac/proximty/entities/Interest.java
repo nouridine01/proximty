@@ -12,6 +12,13 @@ public class Interest {
 
     private String name;
 
+    public Interest(){
+
+    }
+
+    public Interest(String name){
+        this.name=name;
+    }
     public long getId() {
         return id;
     }

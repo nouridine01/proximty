@@ -12,9 +12,9 @@ import com.uqac.proximty.entities.User;
 
 import java.util.List;
 
-@Dao
+//@Dao
 public interface InterestDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertInterests(Interest... interests);
 
     @Delete
@@ -24,5 +24,5 @@ public interface InterestDao {
     Interest getInterestByName(String name);
 
     @Query("SELECT * FROM Interest")
-    List<Interest> getAll();
+    List<Interest> getAll();*/
 }

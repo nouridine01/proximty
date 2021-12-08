@@ -62,9 +62,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.activities.ChatActivity;
+import com.uqac.proximty.entities.User;
+import com.uqac.proximty.repositories.UserRepository;
 import com.uqac.proximty.sockets.Client;
 import com.uqac.proximty.sockets.ServeurMT;
 
@@ -110,6 +113,8 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     private View deviceClickedView=null;
 
     public ServeurMT serveurMT;
+
+    UserRepository userRepository;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -164,6 +169,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     private void initialSetup(View view) {
 
         serveurMT = new ServeurMT(getActivity());
+        userRepository=new UserRepository(getActivity());
         // layout files
         rippleBackground = (RippleBackground) view.findViewById(R.id.content);
         centerDeviceIcon = (ImageView) view.findViewById(R.id.centerImage);
@@ -174,7 +180,6 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 serveurMT.start();
                 discover();
                 scan=false;
-
                 Toast.makeText(getActivity(),  Settings.Global.getString(getActivity().getContentResolver(), "device_name"), Toast.LENGTH_SHORT).show();
             }
 
@@ -295,10 +300,30 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
             }
         });
 
-        GridLayout gridLayoutInterte = bottomSheetView.findViewById(R.id.grid_interet);
-        TextView textInteret=  new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
-        textInteret.setText("programmaticaly");
-        gridLayoutInterte.addView(textInteret);
+        ImageView imageView = bottomSheetView.findViewById(R.id.imageProfil);
+
+        CompletableFuture<User> pr= userRepository.getUserByPseudo("noor");
+        pr.thenAccept(u->{
+            Log.e("test firebase async", u.toString());
+            userRepository.getImage(u.getPhoto()).thenAccept(im->{
+                if(im!=null)
+                    imageView.setImageBitmap((Bitmap) im);
+                else imageView.setImageResource(R.drawable.email);
+            });
+
+            TextView textPseudo=bottomSheetView.findViewById(R.id.txtNameAnonym);
+            textPseudo.setText(u.getPseudo());
+
+            u.getInterests().forEach(i->{
+                GridLayout gridLayoutInterte = bottomSheetView.findViewById(R.id.grid_interet);
+                TextView textInteret=  new TextView(view.getContext(), null, 0, R.style.ButtonInteret);
+                textInteret.setText(i);
+                gridLayoutInterte.addView(textInteret);
+            });
+        });
+
+
+
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
     }

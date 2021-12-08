@@ -41,7 +41,7 @@ public class ServeurMT extends Thread{
 	public ServeurMT(Context context){
 		userRepository = new UserRepository(context);
 		//prefManager = new PrefManager(context);
-		userDao=AppDatabase.getDatabase(context).userDao();
+		//userDao=AppDatabase.getDatabase(context).userDao();
 		this.context=context;
 	}
 	
@@ -123,7 +123,7 @@ public class ServeurMT extends Thread{
 					//tranmission des info perso du profil envoi du non pseudo et interet
 					String lineread = br.readLine();
 					if(lineread.equals(INFO)){
-						User user=userRepository.getConnectedUser(1);//prefManager.getUserId()
+						User user=userRepository.getConnectedUser("noor");//prefManager.getUserId()
 						os.write(user.getPseudo().getBytes(StandardCharsets.UTF_8));
 						//os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement
 						Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
@@ -135,7 +135,7 @@ public class ServeurMT extends Thread{
 						os.write(byteArray);
 						bmp.recycle();
 
-						UserWithInterests userWithInterests = userDao.getUserWithInterests(user.getUid());
+						/*UserWithInterests userWithInterests = userDao.getUserWithInterests(user.getUid());
 						os.write(userWithInterests.interests.size());
 						userWithInterests.interests.forEach(interest -> {
 							try {
@@ -144,7 +144,7 @@ public class ServeurMT extends Thread{
 								e.printStackTrace();
 							}
 
-						});
+						});*/
 
 					}else{
 						while(true) {

@@ -89,9 +89,9 @@ public class ProfilFragment extends Fragment {
         super.onCreate(savedInstanceState);
         prefManager = new PrefManager(getActivity());
         userRepository = new UserRepository(getActivity());
-        user = userRepository.getConnectedUser(prefManager.getUserId());
-        allInterests = AppDatabase.getDatabase(getActivity()).interestDao().getAll();
-        userWithInterests = AppDatabase.getDatabase(getActivity()).userDao().getUserWithInterests(user.getUid());
+        user = userRepository.getConnectedUser(prefManager.getUserPseudo());
+        //allInterests = AppDatabase.getDatabase(getActivity()).interestDao().getAll();
+        //userWithInterests = AppDatabase.getDatabase(getActivity()).userDao().getUserWithInterests(user.getUid());
     }
 
     @Override

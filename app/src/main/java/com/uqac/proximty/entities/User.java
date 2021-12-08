@@ -14,11 +14,11 @@ import java.util.List;
 import dagger.Component;
 import dagger.hilt.DefineComponent;
 
-@Entity(indices = {@Index(value = {"pseudo"},
-        unique = true)})
+/*@Entity(indices = {@Index(value = {"pseudo"},
+        unique = true)})*/
 
 public class User {
-    @PrimaryKey(autoGenerate = true)
+    //@PrimaryKey(autoGenerate = true)
     private long uid;
 
     private String pseudo;

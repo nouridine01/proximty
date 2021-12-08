@@ -55,9 +55,9 @@ public class ModificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_modification);
         prefManager = new PrefManager(this);
         userRepository = new UserRepository(this);
-        user = userRepository.getConnectedUser(prefManager.getUserId());
-        allInterests = AppDatabase.getDatabase(this).interestDao().getAll();
-        userWithInterests = AppDatabase.getDatabase(this).userDao().getUserWithInterests(user.getUid());
+        user = userRepository.getConnectedUser(prefManager.getUserPseudo());
+        //allInterests = AppDatabase.getDatabase(this).interestDao().getAll();
+        //userWithInterests = AppDatabase.getDatabase(this).userDao().getUserWithInterests(user.getUid());
 
         initialSetup(findViewById(R.id.scrollLayout));
     }
@@ -115,9 +115,9 @@ public class ModificationActivity extends AppCompatActivity {
             user.setPassword(password.getText().toString());
             user.setPhoto(photoLink);
 
-            UserDao userDao = AppDatabase.getDatabase(this).userDao();
-            userDao.updateUsers(user);
-            userDao.insertUsersAndInterests(user, userInterests);
+            //UserDao userDao = AppDatabase.getDatabase(this).userDao();
+            //userDao.updateUsers(user);
+            //userDao.insertUsersAndInterests(user, userInterests);
         });
     }
 

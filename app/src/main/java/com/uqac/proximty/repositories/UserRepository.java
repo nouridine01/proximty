@@ -2,6 +2,8 @@ package com.uqac.proximty.repositories;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -18,6 +20,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.uqac.proximty.PrefManager;
+import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.Interest;
@@ -27,48 +30,84 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class UserRepository {
     private UserDao userDao;
     AppDatabase appDatabase;
     FirebaseStorage storage = FirebaseStorage.getInstance("gs://proximty-d72e1.appspot.com");
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    User user = null;
 
     public UserRepository(Context context) {
-        this.userDao = AppDatabase.getDatabase(context).userDao();
+        //this.userDao = AppDatabase.getDatabase(context).userDao();
 
     }
 
-    public User getConnectedUser(long id){
-        return userDao.getUserById(id);
+    public User getConnectedUser(String pseudo){
+        return null;//userDao.getUserById(id);
+        //utiliser get by user pseudo
     }
 
     public void add(User user) throws Exception {
         DocumentReference ref = db.collection("users").document(user.getPseudo());
-        if(ref == null){
-            // Add a new document
-            db.collection("users").document(user.getPseudo()).set(user);
-        }else throw new Exception("pseudo exist");
+
+        ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User u = documentSnapshot.toObject(User.class);
+                if(u.getPseudo().equals("")){
+                    // Add a new document
+                    db.collection("users").document(user.getPseudo()).set(user);
+                }else
+                    try {
+                        throw new Exception("pseudo exist");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+            }
+
+        });
+
         /*DocumentReference newCityRef = db.collection("cities").document();
+        users.setid(newCityref.getId());
         newCityRef.set(users);*/
     }
 
-    public User getUser(String pseudo){
-        final User[] user = {null};
+    public void getUser(String pseudo,GetUserCallback userCallback){
+
         DocumentReference docRef = db.collection("users").document(pseudo);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User u = documentSnapshot.toObject(User.class);
-                user[0] = u;
+                userCallback.onCallback(u);
             }
 
         });
-        return user[0];
+
     }
 
-    public User connexion(String pseudo, String pwd){
-        final User[] user = {null};
+    public CompletableFuture<User> getUserByPseudo(String pseudo){
+
+        final CompletableFuture<User> promise = new CompletableFuture<>();
+
+        DocumentReference docRef = db.collection("users").document(pseudo);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User u = documentSnapshot.toObject(User.class);
+                promise.complete(u);
+            }
+        }).addOnFailureListener(command -> {
+            promise.complete(null);
+        });
+        return promise;
+    }
+
+    public CompletableFuture<User> connexion(String pseudo, String pwd){
+        final CompletableFuture<User> promise = new CompletableFuture<>();
         db.collection("users").whereEqualTo("pseudo",pseudo).whereEqualTo("password",pwd)
         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -76,14 +115,16 @@ public class UserRepository {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     User u = document.toObject(User.class);
-                    user[0] = u;
+                    promise.complete(u);
                 } else {
                     //Log.d(TAG, "Error getting documents: ", task.getException());
+                    promise.complete(null);
                 }
             }
+        }).addOnFailureListener(command -> {
+            promise.complete(null);
         });
-
-        return user[0];
+        return  promise;
     }
 
     public List<Interest> getAll(){
@@ -131,11 +172,11 @@ public class UserRepository {
         // Create a Cloud Storage reference from the app
         StorageReference storageRef = storage.getReference();
         // Create a reference to "mountains.jpg"
-        StorageReference imRef = storageRef.child("profils/"+name+".jpg");
+        StorageReference imRef = storageRef.child("profils/"+name);
 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
 
         UploadTask uploadTask = imRef.putBytes(data);
@@ -156,45 +197,45 @@ public class UserRepository {
 
 
 
-    public Bitmap getImage(String imageName){
+    public CompletableFuture<Bitmap> getImage(String imageName){
         // Create a Cloud Storage reference from the app
         StorageReference storageRef = storage.getReference();
-        StorageReference imRef = storageRef.child("profils/"+imageName+".jpg");
+        StorageReference imRef = storageRef.child("profils/"+imageName);
+        final CompletableFuture<Bitmap> promise = new CompletableFuture<>();
 
-        Bitmap image = null;
         final long ONE_MEGABYTE = 1024 * 1024;
         imRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 // Data for "images/island.jpg" is returns, use this as needed
-
+                Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                promise.complete(image);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
+                promise.complete(null);
             }
         });
-        return image;
+        return promise;
     }
 
-    public User getUserByDeviceName(String deviceName){
-        final User[] user = {null};
-        db.collection("users").whereEqualTo("deviceName",deviceName)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                    User u = document.toObject(User.class);
-                    user[0] = u;
-                } else {
-                    //Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+    public CompletableFuture<User> getUserByDeviceName(String name){
 
-        return user[0];
+        final CompletableFuture<User> promise = new CompletableFuture<>();
+
+        DocumentReference docRef = db.collection("users").document(name);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User u = documentSnapshot.toObject(User.class);
+                promise.complete(u);
+            }
+        }).addOnFailureListener(command -> {
+            promise.complete(null);
+        });
+        return promise;
     }
 
 

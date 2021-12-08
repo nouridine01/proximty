@@ -38,15 +38,20 @@ public class LoginActivity extends AppCompatActivity {
 
         String pseudo = inputPseudo.getText().toString();
         String password = inputPassword.getText().toString();
-        userDao=AppDatabase.getDatabase(this).userDao();
-        User user = userDao.connexion(pseudo,password);
+        //userDao=AppDatabase.getDatabase(this).userDao();
+        User user = null ;//userDao.connexion(pseudo,password);
+
         if(user != null){
             prefManager.setFirstTimeLaunch(false);
-            prefManager.setUserId(user.getUid());
+            prefManager.setUserPseudo(user.getPseudo());
             startActivity(new Intent(this, MainActivity.class));
         }else {
             Toast.makeText(this,"identifiant invalide",Toast.LENGTH_LONG).show();
         }
+
+        prefManager.setFirstTimeLaunch(false);
+
+        startActivity(new Intent(this, MainActivity.class));
 
     }
 

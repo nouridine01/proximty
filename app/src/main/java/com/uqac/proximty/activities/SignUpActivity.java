@@ -57,7 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
         String firstName = inputFirstName.getText().toString();
         String password = inputPassword.getText().toString();
         String confirmPassword = inputCPassword.getText().toString();
-        userDao=AppDatabase.getDatabase(this).userDao();
+        //userDao=AppDatabase.getDatabase(this).userDao();
         //Function de signUp
         User u = new User();
         u.setLastName(lastName);
@@ -66,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
         u.setPhoto("default_profile_pic");
         if(password.equals(confirmPassword)){
             u.setPassword(password);
-            userDao.insertUsers(u);
+            //userDao.insertUsers(u);
             prefManager.setFirstTimeLaunch(false);
             startActivity(new Intent(this, LoginActivity.class));
         }else {

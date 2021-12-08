@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.uqac.proximty.broadcasts.WiFiDirectBroadcastReceiver;
+import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.fragments.NotificationFragment;
 import com.uqac.proximty.fragments.ProfilFragment;
 import com.uqac.proximty.fragments.Scan_page;
@@ -54,6 +57,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 //@AndroidEntryPoint
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
     UserInterestCrossRefDao userInterestCrossRefDao;
     UserFriendCrossRefDao userFriendCrossRefDao;
     TextView text;
+
 
     ArrayList<Contact> contacts;
 
@@ -169,9 +174,6 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
             // onRequestPermissionsResult(int, String[], int[]) overridden method
         }
 
-
-        //initialisation();
-
     }
 
     public void setDeviceName(String devName) {
@@ -266,6 +268,22 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
             return false;
         }
 
+        User u = new User();
+        u.setPassword("123");
+        u.setPseudo("test");
+        u.getFriends().add("noor");
+        u.getInterests().add("Lecture");
+        u.setPhoto("profil.png");
+
+        try {
+            userRepository.add(u);
+        } catch (Exception e) {
+            Log.e(TAG,e.getMessage());
+        }
+
+        Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.email);
+        userRepository.addImage("email.png",icon);
         return true;
     }
 
@@ -414,106 +432,4 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
 
 
 
-    private void initialisation(){
-        //initialisation
-
-        userDao=AppDatabase.getDatabase(this).userDao();
-        interestDao=AppDatabase.getDatabase(this).interestDao();
-        userFriendCrossRefDao=AppDatabase.getDatabase(this).userFriendCrossRefDao();
-        userInterestCrossRefDao=AppDatabase.getDatabase(this).userInterestCrossRefDao();
-        // insertion users
-        User u = new User();
-        u.setLastName("nouridine");
-        u.setFirstName("oumarou");
-        u.setPseudo("noor");
-        u.setPassword("123");
-
-        User u2 = new User();
-        u2.setLastName("bili");
-        u2.setFirstName("oumar");
-        u2.setPseudo("bili");
-        u.setPassword("123");
-        //userDao.insertUsers(u,u2);
-        //
-
-        //insertion interest
-        Interest t1 = new Interest();
-        t1.setName("Lecture");
-        Interest t2 = new Interest();
-        t2.setName("Soccer");
-        //interestDao.insertInterests(t1,t2);
-
-        //creation friend
-        UserFriendCrossRef userFriendCrossRef = new UserFriendCrossRef();
-        userFriendCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
-        userFriendCrossRef.setFriend(userDao.getUserByPseudo("test").getUid());
-        //userFriendCrossRefDao.insertUserFriendCrossRef(userFriendCrossRef);
-
-        //attribute interest
-        UserInterestCrossRef userInterestCrossRef=new UserInterestCrossRef();
-        userInterestCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
-        userInterestCrossRef.setId(interestDao.getInterestByName("Lecture").getId());
-        //userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);
-
-
-        List<User> list=new ArrayList<>();
-        try {
-            System.out.println("----------------list users----------------");
-            userDao.getAll().forEach(user->{
-                System.out.println(user.toString());
-
-            });
-
-            System.out.println("----------------list interests----------------");
-            interestDao.getAll().forEach(in->{
-                System.out.println(in.toString());
-
-            });
-
-            System.out.println("----------------list user friend cross ref----------------");
-            userFriendCrossRefDao.getAll().forEach(i->{
-                System.out.println(i.toString());
-
-            });
-
-            User c = userDao.connexion("noor","123");
-            System.out.println("----------------connection----------------");
-            System.out.println(c.toString());
-
-            System.out.println("----------------user interests----------------");
-            UserWithInterests userWithInterests = userDao.getUserWithInterests(userDao.getUserByPseudo("noor").getUid());
-            System.out.println(userWithInterests.interests.get(0).getName());
-
-            System.out.println("----------------user friends----------------");
-            //UserWithFriends userWithFriends = userDao.getUserWithFriends(userDao.getUserByPseudo("noor").getUid());
-            List<User> users = userDao.getUserFriends(userDao.getUserByPseudo("noor").getUid());
-            users.forEach(i->{
-                System.out.println(i.toString());
-
-            });
-
-            //test connectedUser
-            prefManager.setUserId(1);
-            System.out.println("----------------connected user----------------");
-            User user= userRepository.getConnectedUser(prefManager.getUserId());
-            System.out.println(user.toString());
-
-
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-
-        /*// Lookup the recyclerview in activity layout
-        RecyclerView rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
-
-        // Initialize contacts
-        contacts = Contact.createContactsList(20);
-        // Create adapter passing in the sample user data
-        ContactsAdapter adapter = new ContactsAdapter(contacts);
-        // Attach the adapter to the recyclerview to populate items
-        rvContacts.setAdapter(adapter);
-        // Set layout manager to position the items
-        rvContacts.setLayoutManager(new LinearLayoutManager(this));
-        // That's all!*/
-    }
 }

@@ -16,6 +16,7 @@ import com.uqac.proximty.entities.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class InterestRepository {
 
@@ -32,7 +33,8 @@ public class InterestRepository {
 
 
 
-    public List<Interest> getAll(){
+    public CompletableFuture<List<Interest>> getAll(){
+        final CompletableFuture<List<Interest>> promise = new CompletableFuture<>();
         List<Interest> list = new ArrayList<>();
         db.collection("interests")
                 .get()
@@ -44,6 +46,7 @@ public class InterestRepository {
                                 //Log.d(TAG, document.getId() + " => " + document.getData());
                                 list.add(new Interest(document.toObject(Interest.class).getName()));
                             }
+                            promise.complete(list);
                         } else {
                             //Log.w(TAG, "Error getting documents.", task.getException());
                         }
@@ -51,7 +54,7 @@ public class InterestRepository {
                 });
 
 
-        return list;
+        return promise;
     }
 
 

@@ -4,7 +4,7 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-@Entity(primaryKeys = {"uid", "friend"},
+/*@Entity(primaryKeys = {"uid", "friend"},
         foreignKeys = {
                 @ForeignKey(entity = User.class,
                         parentColumns = "uid",
@@ -13,7 +13,7 @@ import androidx.room.Index;
                         parentColumns = {"uid"},
                         childColumns = {"friend"})
         },
-        indices = {@Index(value = {"friend"})})
+        indices = {@Index(value = {"friend"})})*/
 public class UserFriendCrossRef {
     private long uid;
     private long friend;

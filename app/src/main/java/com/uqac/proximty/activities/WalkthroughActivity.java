@@ -137,10 +137,10 @@ public class WalkthroughActivity extends AppCompatActivity {
     private void initialisation(){
         //initialisation
 
-        userDao=AppDatabase.getDatabase(this).userDao();
-        interestDao=AppDatabase.getDatabase(this).interestDao();
-        userFriendCrossRefDao=AppDatabase.getDatabase(this).userFriendCrossRefDao();
-        userInterestCrossRefDao=AppDatabase.getDatabase(this).userInterestCrossRefDao();
+        //userDao=AppDatabase.getDatabase(this).userDao();
+        //interestDao=AppDatabase.getDatabase(this).interestDao();
+        //userFriendCrossRefDao=AppDatabase.getDatabase(this).userFriendCrossRefDao();
+        //userInterestCrossRefDao=AppDatabase.getDatabase(this).userInterestCrossRefDao();
         // insertion users
         /*User u = new User();
         u.setLastName("nouridine");
@@ -187,7 +187,7 @@ public class WalkthroughActivity extends AppCompatActivity {
         Interest t15 = new Interest();
         t15.setName("Bien-être & santé");
 
-        interestDao.insertInterests(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15);
+        //interestDao.insertInterests(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15);
 
         /*//creation friend
         UserFriendCrossRef userFriendCrossRef = new UserFriendCrossRef();

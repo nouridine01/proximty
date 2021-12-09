@@ -174,7 +174,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 scan=false;
             }
 
-            //showUserDetailDialo(view);
+            showUserDetailDialo(view);
         });
 
         // center button position

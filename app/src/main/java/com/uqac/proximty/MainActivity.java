@@ -86,11 +86,13 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
     private final IntentFilter intentFilter = new IntentFilter();
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
-
     private PrefManager prefManager;
     private UserRepository userRepository;
 
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     private TabAdapter adapter;
+
 
     public TabAdapter getAdapter() {
         return adapter;
@@ -116,8 +118,15 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         this.channel = channel;
     }
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    public PrefManager getPrefManager() {
+        return prefManager;
+    }
+
+    public void setPrefManager(PrefManager prefManager) {
+        this.prefManager = prefManager;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

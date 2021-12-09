@@ -1,10 +1,12 @@
 package com.uqac.proximty.adaptaters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.uqac.proximty.entities.User;
 import com.uqac.proximty.models.Contact;
 import com.uqac.proximty.R;
+import com.uqac.proximty.repositories.UserRepository;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class ContactsAdapter extends
 
     // Store a member variable for the contacts
     private List<User> mUsers;
+    UserRepository userRepository;
 
     // Pass in the contact array into the constructor
     public ContactsAdapter(List<User> users) {
@@ -35,6 +39,8 @@ public class ContactsAdapter extends
         // for any view that will be set as you render a row
         public TextView nameTextView, lastMessage;
         public Button messageButton;
+        ImageView imageView;
+
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -42,10 +48,12 @@ public class ContactsAdapter extends
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-
+            userRepository = new UserRepository(itemView.getContext());
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
             lastMessage = (TextView) itemView.findViewById(R.id.lastMessage);
             messageButton = (Button) itemView.findViewById(R.id.message_button);
+            imageView = itemView.findViewById(R.id.imageView);
+
         }
     }
 
@@ -70,6 +78,13 @@ public class ContactsAdapter extends
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
         textView.setText(user.getPseudo());
+        ImageView imageView = (ImageView) holder.imageView;
+
+        userRepository.getImage(user.getPhoto()).thenAccept(im->{
+                if(im!=null) {
+                    imageView.setImageBitmap((Bitmap) im);
+                } else imageView.setImageResource(R.drawable.email);
+         });
         Button button = holder.messageButton;
         //button.setText(user.isOnline() ? "Message" : "Offline");
         //button.setEnabled(user.isOnline());

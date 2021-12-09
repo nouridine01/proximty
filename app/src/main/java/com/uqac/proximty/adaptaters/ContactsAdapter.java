@@ -32,7 +32,7 @@ public class ContactsAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public TextView nameTextView;
+        public TextView nameTextView, lastMessage;
         public Button messageButton;
 
         // We also create a constructor that accepts the entire item row
@@ -43,6 +43,7 @@ public class ContactsAdapter extends
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
+            lastMessage = (TextView) itemView.findViewById(R.id.lastMessage);
             messageButton = (Button) itemView.findViewById(R.id.message_button);
         }
     }

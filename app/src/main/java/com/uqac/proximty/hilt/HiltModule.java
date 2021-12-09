@@ -13,11 +13,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 @Module
 @InstallIn(ActivityComponent.class)
 public class HiltModule {
-    @Provides
+    /*@Provides
     public static AppDatabase provideAppDatabase(
             // Potential dependencies of this type
             @ApplicationContext Context context
     ) {
         return AppDatabase.getDatabase(context);
-    }
+    }*/
 }

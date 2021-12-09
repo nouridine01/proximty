@@ -1,5 +1,8 @@
 package com.uqac.proximty.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -11,11 +14,11 @@ import java.util.List;
 import dagger.Component;
 import dagger.hilt.DefineComponent;
 
-@Entity(indices = {@Index(value = {"pseudo"},
-        unique = true)})
+/*@Entity(indices = {@Index(value = {"pseudo"},
+        unique = true)})*/
 
 public class User {
-    @PrimaryKey(autoGenerate = true)
+    //@PrimaryKey(autoGenerate = true)
     private long uid;
 
     private String pseudo;
@@ -29,6 +32,12 @@ public class User {
     private String password;
 
     private String photo;
+
+    private List<String> friends = new ArrayList<>();
+    private List<String> interests = new ArrayList<>();
+
+    public User() {
+    }
 
     public long getUid() {
         return uid;
@@ -76,6 +85,22 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public List<String> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<String> friends) {
+        this.friends = friends;
+    }
+
+    public List<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(List<String> interests) {
+        this.interests = interests;
     }
 
     @Override

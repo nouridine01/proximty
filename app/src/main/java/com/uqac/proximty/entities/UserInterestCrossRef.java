@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-@Entity(primaryKeys = {"uid", "id"})
+//@Entity(primaryKeys = {"uid", "id"})
 public class UserInterestCrossRef {
 
     private long uid;

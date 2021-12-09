@@ -17,6 +17,8 @@ public class MNotification {
     private String image;
     private boolean accepted = false;
     private boolean pending = true;
+    private String senderId;
+    private String receverId;
 
     public MNotification() {
     }

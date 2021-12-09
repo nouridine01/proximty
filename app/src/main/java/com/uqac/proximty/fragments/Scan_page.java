@@ -158,6 +158,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         });
     }
 
+
     private void initialSetup(View view) {
 
         serveurMT = new ServeurMT(getActivity());

@@ -134,8 +134,6 @@ public class NotificationAdapter extends RecyclerView.Adapter{
         public ImageView imageView ;
         public AcceptedHolder(View itemView) {
             super(itemView);
-
-        // get the reference of item view's
             textViewPseudo = (TextView) itemView.findViewById(R.id.pseudo);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
         }

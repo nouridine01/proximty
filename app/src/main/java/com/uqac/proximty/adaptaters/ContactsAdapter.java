@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.uqac.proximty.entities.User;
 import com.uqac.proximty.models.Contact;
 import com.uqac.proximty.R;
 
@@ -20,11 +21,11 @@ public class ContactsAdapter extends
 
 
     // Store a member variable for the contacts
-    private List<Contact> mContacts;
+    private List<User> mUsers;
 
     // Pass in the contact array into the constructor
-    public ContactsAdapter(List<Contact> contacts) {
-        mContacts = contacts;
+    public ContactsAdapter(List<User> users) {
+        this.mUsers = users;
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -64,18 +65,18 @@ public class ContactsAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Contact contact = mContacts.get(position);
+        User user = mUsers.get(position);
 
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
-        textView.setText(contact.getName());
+        textView.setText(user.getPseudo());
         Button button = holder.messageButton;
-        button.setText(contact.isOnline() ? "Message" : "Offline");
-        button.setEnabled(contact.isOnline());
+        //button.setText(user.isOnline() ? "Message" : "Offline");
+        //button.setEnabled(user.isOnline());
     }
 
     @Override
     public int getItemCount() {
-        return mContacts.size();
+        return mUsers.size();
     }
 }

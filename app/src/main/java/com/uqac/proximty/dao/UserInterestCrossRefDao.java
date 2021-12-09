@@ -12,8 +12,10 @@ import com.uqac.proximty.entities.UserInterestCrossRef;
 //@Dao
 public interface UserInterestCrossRefDao {
     /*@Insert(onConflict = OnConflictStrategy.REPLACE)
+
     public void insertUserInterestCrossRef(UserInterestCrossRef... UserInterestCrossRefs);
 
     @Delete
     void delete(Interest interest);*/
+
 }

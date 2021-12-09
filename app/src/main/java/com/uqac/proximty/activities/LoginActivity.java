@@ -55,20 +55,6 @@ public class LoginActivity extends AppCompatActivity {
         String pseudo = inputPseudo.getText().toString();
         String password = inputPassword.getText().toString();
 
-        userDao=AppDatabase.getDatabase(this).userDao();
-        User user = userDao.connexion(pseudo,password);
-        if(user != null){
-            prefManager.setFirstTimeLaunch(false);
-            startActivity(new Intent(this, MainActivity.class));
-        }else {
-            Toast.makeText(this,"identifiant invalide",Toast.LENGTH_LONG).show();
-        }
-
-
-        //userDao=AppDatabase.getDatabase(this).userDao();
-        //User user = null ;//userDao.connexion(pseudo,password);
-
-
         CompletableFuture<User> promise = userRepository.connexion(pseudo, password);
         promise.thenAccept(u ->{
             if(u != null){

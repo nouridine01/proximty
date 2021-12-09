@@ -15,9 +15,9 @@ import com.uqac.proximty.entities.UserWithInterests;
 
 import java.util.List;
 
-@Dao
+//@Dao
 public interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertUsers(User... users);
 
     @Insert
@@ -48,10 +48,7 @@ public interface UserDao {
     @Query("SELECT * FROM User")
     public List<UserWithFriends> getUserWithFriends();
 
-    @Transaction
-    //@Query("SELECT * FROM User u1 INNER JOIN UserFriendCrossRef uf ON u1.uid=uf.uid INNER JOIN User u2 ON u2.uid=uf.friend WHERE u1.uid=:id")
-    @Query("SELECT * FROM User u1 WHERE u1.uid=:id")
-    public UserWithFriends getUserWithFriends(long id);
+
 
     @Transaction
     @Query("SELECT * FROM User u WHERE u.uid=:id")
@@ -61,5 +58,5 @@ public interface UserDao {
 
     @Transaction
     @Query("SELECT * FROM User")
-    public List<UserWithInterests> getUserWithInterests();
+    public List<UserWithInterests> getUserWithInterests();*/
 }

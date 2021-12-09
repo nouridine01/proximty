@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy;
 
 import com.uqac.proximty.entities.UserInterestCrossRef;
 
-@Dao
+//@Dao
 public interface UserInterestCrossRefDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertUserInterestCrossRef(UserInterestCrossRef... UserInterestCrossRefs);
+    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertUserInterestCrossRef(UserInterestCrossRef... UserInterestCrossRefs);*/
 }

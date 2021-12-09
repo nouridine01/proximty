@@ -14,8 +14,8 @@ import com.uqac.proximty.entities.UserInterestCrossRef;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Interest.class,UserInterestCrossRef.class, UserFriendCrossRef.class}, version = 1)
-public abstract class AppDatabase extends RoomDatabase {
+//@Database(entities = {/*User.class, Interest.class,UserInterestCrossRef.class, UserFriendCrossRef.class*/}, version = 1)
+public abstract class AppDatabase /*extends RoomDatabase*/ {
     public abstract UserDao userDao();
     public abstract InterestDao interestDao();
     public abstract UserFriendCrossRefDao userFriendCrossRefDao();
@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    public static AppDatabase getDatabase(final Context context) {
+    /*public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
@@ -37,6 +37,6 @@ public abstract class AppDatabase extends RoomDatabase {
             }
         }
         return INSTANCE;
-    }
+    }*/
 
 }

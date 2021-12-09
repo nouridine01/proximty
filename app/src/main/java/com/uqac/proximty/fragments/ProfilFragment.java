@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 
@@ -140,6 +141,7 @@ public class ProfilFragment extends Fragment {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null && requestCode == PICK_IMAGE) {

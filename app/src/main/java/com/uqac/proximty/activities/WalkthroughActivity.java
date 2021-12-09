@@ -43,8 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WalkthroughActivity extends AppCompatActivity {
-
-
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;

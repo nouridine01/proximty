@@ -26,7 +26,6 @@ public class TabActivity  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabs);
-
     }
 
     public void selectFrag(View view) {

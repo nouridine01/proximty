@@ -57,7 +57,7 @@ public class ProfilFragment extends Fragment {
     private User user;
     Button modify;
     ImageView photo;
-    TextView lastName, firstName, pseudo, password;
+    TextView lastName, firstName, pseudo;
     FlowLayout interests;
     UserWithInterests userWithInterests;
     List<Interest> allInterests, userInterests;

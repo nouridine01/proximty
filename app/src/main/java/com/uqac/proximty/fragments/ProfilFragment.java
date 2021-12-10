@@ -28,6 +28,7 @@ import androidx.lifecycle.Lifecycle;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
+import com.uqac.proximty.activities.LoginActivity;
 import com.uqac.proximty.activities.ModificationActivity;
 import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
@@ -57,16 +58,11 @@ public class ProfilFragment extends Fragment {
     private PrefManager prefManager;
     private UserRepository userRepository;
     private User user;
-    Button modify;
+    Button modify, disconnect;
     ImageView photo;
     TextView lastName, firstName, pseudo;
     FlowLayout interests;
-    UserWithInterests userWithInterests;
-    List<Interest> allInterests, userInterests;
-
-    String photoLink;
-    private String currentInterest;
-
+    List<String> userInterests;
 
     public ProfilFragment() {
         // Required empty public constructor
@@ -91,9 +87,6 @@ public class ProfilFragment extends Fragment {
         super.onCreate(savedInstanceState);
         prefManager = new PrefManager(getActivity());
         userRepository = new UserRepository(getActivity());
-
-        //allInterests = AppDatabase.getDatabase(getActivity()).interestDao().getAll();
-        //userWithInterests = AppDatabase.getDatabase(getActivity()).userDao().getUserWithInterests(user.getUid());
     }
 
     @Override
@@ -140,35 +133,25 @@ public class ProfilFragment extends Fragment {
 
         interests = (FlowLayout) view.findViewById(R.id.interests);
 
-        userInterests = userWithInterests.interests;
-        for (Interest interest : userInterests) {
-            createDeleteInterest(interest.getName());
+        userInterests = user.getInterests();
+        for (String interest : userInterests) {
+            createInterest(interest);
         }
 
         modify = (Button) view.findViewById(R.id.modify);
         modify.setOnClickListener(view2 -> {
             startActivity(new Intent(getActivity(), ModificationActivity.class));
         });
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null && requestCode == PICK_IMAGE) {
-            Uri photoUri = data.getData();
-            Bitmap selectedImage = null;
-            try {
-                ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), photoUri);
-                selectedImage = ImageDecoder.decodeBitmap(source);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Drawable res = new BitmapDrawable(getResources(), selectedImage);
-            photo.setImageDrawable(res);
-        }
+        disconnect = (Button) view.findViewById(R.id.disconnect);
+        disconnect.setOnClickListener(view2 -> {
+            prefManager.setUserConnected(false);
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        });
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void createDeleteInterest(String interest) {
+    private void createInterest(String interest) {
         Button newInterest = new Button(getActivity());
 
         newInterest.setBackground(getResources().getDrawable(R.drawable.interest_button));

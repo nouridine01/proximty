@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.uqac.proximty.activities.LoginActivity;
 import com.uqac.proximty.broadcasts.WiFiDirectBroadcastReceiver;
 import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.fragments.NotificationFragment;
@@ -141,6 +142,11 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         prefManager = new PrefManager(this);
         if (prefManager.isFirstTimeLaunch()) {
             launchWalktroughScreen();
+            finish();
+        }
+
+        if (!prefManager.getUserConnected()) {
+            launchLoginActivity();
             finish();
         }
 
@@ -294,6 +300,10 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
     private void launchWalktroughScreen() {
         prefManager.setFirstTimeLaunch(false);
         startActivity(new Intent(this, WalkthroughActivity.class));
+    }
+
+    private void launchLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
 

@@ -28,33 +28,40 @@ import com.uqac.proximty.entities.Interest;
 import com.uqac.proximty.entities.User;
 import com.uqac.proximty.entities.UserWithInterests;
 import com.uqac.proximty.models.FlowLayout;
+import com.uqac.proximty.repositories.InterestRepository;
 import com.uqac.proximty.repositories.UserRepository;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ModificationActivity extends AppCompatActivity {
 
     public final static int PICK_IMAGE = 1;
 
-    private PrefManager prefManager;
-    private UserRepository userRepository;
     private User user;
     Button modifPhoto, save;
     ImageView photo;
     EditText lastName, firstName, pseudo, password;
     FlowLayout interests;
     ImageButton addInterest;
-    UserWithInterests userWithInterests;
-    List<Interest> allInterests, userInterests;
+    List<Interest> allInterests;
+    List<String> userInterests;
+    Bitmap userPicture;
 
-    String photoLink;
+    UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modification);
-        prefManager = new PrefManager(this);
+        PrefManager prefManager = new PrefManager(this);
+
+        InterestRepository interestRepository = new InterestRepository();
+        interestRepository.getAll().thenAccept(list -> {
+            allInterests = list;
+        });
+
         userRepository = new UserRepository(this);
         userRepository.getConnectedUser(prefManager.getUserPseudo(), new GetUserCallback() {
             @Override
@@ -63,9 +70,6 @@ public class ModificationActivity extends AppCompatActivity {
                 initialSetup(findViewById(R.id.scrollLayout));
             }
         });
-
-        //allInterests = AppDatabase.getDatabase(this).interestDao().getAll();
-        //userWithInterests = AppDatabase.getDatabase(this).userDao().getUserWithInterests(user.getUid());
 
 
     }
@@ -110,9 +114,11 @@ public class ModificationActivity extends AppCompatActivity {
             addInterestSheetDialog(view);
         });
 
-        userInterests = userWithInterests.interests;
-        for (Interest interest : userInterests) {
-            createDeleteInterest(view, interest);
+        userInterests = user.getInterests();
+        for (Interest interest : allInterests) {
+            if (userInterests.contains(interest.getName())) {
+                createDeleteInterest(view, interest);
+            }
         }
 
         save = (Button) view.findViewById(R.id.modify);
@@ -121,11 +127,9 @@ public class ModificationActivity extends AppCompatActivity {
             user.setFirstName(firstName.getText().toString());
             user.setPseudo(pseudo.getText().toString());
             user.setPassword(password.getText().toString());
-            user.setPhoto(photoLink);
 
-            //UserDao userDao = AppDatabase.getDatabase(this).userDao();
-            //userDao.updateUsers(user);
-            //userDao.insertUsersAndInterests(user, userInterests);
+            userRepository.addImage(user.getPseudo(), userPicture);
+            userRepository.update(user);
         });
     }
 
@@ -141,6 +145,7 @@ public class ModificationActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            userPicture = selectedImage;
             Drawable res = new BitmapDrawable(getResources(), selectedImage);
             photo.setImageDrawable(res);
         }
@@ -171,7 +176,7 @@ public class ModificationActivity extends AppCompatActivity {
         delete.setOnClickListener(view1 -> {
             FlowLayout flowView = view.findViewById(R.id.interests);
 
-            userInterests.remove(interest);
+            userInterests.remove(interest.getName());
             flowView.removeViewInLayout(button);
             sheet.dismiss();
         });
@@ -187,7 +192,7 @@ public class ModificationActivity extends AppCompatActivity {
         FlowLayout layout = sheetView.findViewById(R.id.addInterest);
 
         for (Interest interest : allInterests) {
-            if (!userInterests.contains(interest)) {
+            if (!userInterests.contains(interest.getName())) {
                 createAddInterest(view, interest, layout);
             }
         }
@@ -201,7 +206,7 @@ public class ModificationActivity extends AppCompatActivity {
         Button newInterest = new Button(this);
 
         newInterest.setOnClickListener(view2 -> {
-            userInterests.add(interest);
+            userInterests.add(interest.getName());
             flowView.removeViewInLayout(newInterest);
             createDeleteInterest(view, interest);
         });

@@ -53,8 +53,6 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ProfilFragment extends Fragment {
 
-    public final static int PICK_IMAGE = 1;
-
     private PrefManager prefManager;
     private UserRepository userRepository;
     private User user;
@@ -99,7 +97,6 @@ public class ProfilFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        CompletableFuture<User> promise = userRepository.getUserByPseudo(prefManager.getUserPseudo());
 
         userRepository.getConnectedUser(prefManager.getUserPseudo(), new GetUserCallback() {
             @Override

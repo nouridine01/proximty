@@ -28,7 +28,7 @@ public class InterestRepository {
         if(ref == null){
             // Add a new document
             db.collection("interests").document(interest.getName()).set(interest);
-        }else throw new Exception("pseudo exist");
+        }else throw new Exception("interest exists");
     }
 
 

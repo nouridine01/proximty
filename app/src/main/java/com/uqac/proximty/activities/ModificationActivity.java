@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
+import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.Interest;
@@ -55,11 +56,18 @@ public class ModificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_modification);
         prefManager = new PrefManager(this);
         userRepository = new UserRepository(this);
-        user = userRepository.getConnectedUser(prefManager.getUserPseudo());
+        userRepository.getConnectedUser(prefManager.getUserPseudo(), new GetUserCallback() {
+            @Override
+            public void onCallback(User u) {
+                user=u;
+                initialSetup(findViewById(R.id.scrollLayout));
+            }
+        });
+
         //allInterests = AppDatabase.getDatabase(this).interestDao().getAll();
         //userWithInterests = AppDatabase.getDatabase(this).userDao().getUserWithInterests(user.getUid());
 
-        initialSetup(findViewById(R.id.scrollLayout));
+
     }
 
     private void initialSetup(View view) {

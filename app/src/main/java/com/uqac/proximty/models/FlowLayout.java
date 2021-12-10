@@ -12,7 +12,9 @@ import android.view.ViewGroup;
  * Code licensed under CC-by-SA
  *
  * @author Henrik Gustafsson
- * @see http://stackoverflow.com/questions/549451/line-breaking-widget-layout-for-android
+
+// * @see http://stackoverflow.com/questions/549451/line-breaking-widget-layout-for-android
+
  * @license http://creativecommons.org/licenses/by-sa/2.5/
  *
  */

@@ -19,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
@@ -27,10 +28,16 @@ import com.uqac.proximty.entities.Interest;
 import com.uqac.proximty.entities.User;
 
 import java.io.ByteArrayOutputStream;
+
+import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
+import java.util.concurrent.ExecutionException;
+
 
 public class UserRepository {
     private UserDao userDao;
@@ -39,14 +46,19 @@ public class UserRepository {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     User user = null;
 
+    List<CompletableFuture<User>> friendsList = new ArrayList<CompletableFuture<User>>();
+
+
     public UserRepository(Context context) {
         //this.userDao = AppDatabase.getDatabase(context).userDao();
 
     }
 
-    public User getConnectedUser(String pseudo){
-        return null;//userDao.getUserById(id);
-        //utiliser get by user pseudo
+    public void getConnectedUser(String pseudo ,GetUserCallback userCallback){
+        CompletableFuture<User> promise = getUserByPseudo(pseudo);
+        promise.thenAccept(user1 -> {
+            userCallback.onCallback(user1);
+        });
     }
 
     public void add(User user) throws Exception {
@@ -103,6 +115,24 @@ public class UserRepository {
         }).addOnFailureListener(command -> {
             promise.complete(null);
         });
+
+        return promise;
+    }
+
+    public CompletableFuture<List<String>> getFriendsFromUserPseudo(String pseudo){
+        final CompletableFuture<List<String>> promise = new CompletableFuture<>();
+
+        DocumentReference docRef = db.collection("users").document(pseudo);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User u = documentSnapshot.toObject(User.class);
+                promise.complete(u.getFriends());
+            }
+        }).addOnFailureListener(command -> {
+            promise.complete(null);
+        });
+
         return promise;
     }
 
@@ -142,7 +172,6 @@ public class UserRepository {
                         }
                     }
                 });
-
 
         return null;
     }
@@ -224,7 +253,6 @@ public class UserRepository {
     public CompletableFuture<User> getUserByDeviceName(String name){
 
         final CompletableFuture<User> promise = new CompletableFuture<>();
-
         DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -237,7 +265,6 @@ public class UserRepository {
         });
         return promise;
     }
-
 
 
 }

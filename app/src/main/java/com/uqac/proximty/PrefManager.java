@@ -51,7 +51,7 @@ public class PrefManager {
     }
 
     public String getUserPseudo() {
-        return pref.getString(USER_PSEUDO,"");
+        return pref.getString(USER_PSEUDO,"test");
     }
 
     public void setUserPseudo(String pseudo) {

@@ -105,12 +105,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
     }
 
 
-
-
-
-
-
-
     class SenderViewHolder extends RecyclerView.ViewHolder
     {
 

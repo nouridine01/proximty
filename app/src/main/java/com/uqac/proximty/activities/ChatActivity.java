@@ -120,7 +120,7 @@ public class ChatActivity extends AppCompatActivity {
         messagesArrayList.add(messages);
         messages=new Messages("Je vais bieb et toi ?","03",3,"1637649973000");
         messagesArrayList.add(messages);
-        
+
         messages=new Messages("Ok super","01",3,"10h23");
 
         messagesArrayList.add(messages);
@@ -128,22 +128,24 @@ public class ChatActivity extends AppCompatActivity {
         messagesAdapter.notifyDataSetChanged();
 
         /**
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                messagesArrayList.clear();
-                for(DataSnapshot snapshot1:snapshot.getChildren())
-                {
-                    Messages messages=snapshot1.getValue(Messages.class);
-                    messagesArrayList.add(messages);
-                }
-                messagesAdapter.notifyDataSetChanged();
+            messagesArrayList.clear();
+            for(DataSnapshot snapshot1:snapshot.getChildren())
+            {
+            Messages messages=snapshot1.getValue(Messages.class);
+            messagesArrayList.add(messages);
+            }
+            messagesAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
          **/
 
@@ -187,22 +189,22 @@ public class ChatActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),enteredmessage,Toast.LENGTH_SHORT).show();
                     /**
 
-                    Date date=new Date();
-                    currenttime=simpleDateFormat.format(calendar.getTime());
-                    Messages messages=new Messages(enteredmessage,firebaseAuth.getUid(),date.getTime(),currenttime);
-                    firebaseDatabase=FirebaseDatabase.getInstance();
-                    firebaseDatabase.getReference().child("chats")
-                            .child(senderroom)
-                            .child("messages")
-                            .push().setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
+                     Date date=new Date();
+                     currenttime=simpleDateFormat.format(calendar.getTime());
+                     Messages messages=new Messages(enteredmessage,firebaseAuth.getUid(),date.getTime(),currenttime);
+                     firebaseDatabase=FirebaseDatabase.getInstance();
+                     firebaseDatabase.getReference().child("chats")
+                     .child(senderroom)
+                     .child("messages")
+                     .push().setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             firebaseDatabase.getReference()
-                                    .child("chats")
-                                    .child(recieverroom)
-                                    .child("messages")
-                                    .push()
-                                    .setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            .child("chats")
+                            .child(recieverroom)
+                            .child("messages")
+                            .push()
+                            .setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
@@ -211,7 +213,8 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
 
-                    mgetmessage.setText(null);
+                     mgetmessage.setText(null);
+
 
                      **/
                 }

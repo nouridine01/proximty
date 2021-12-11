@@ -260,16 +260,27 @@ public class UserRepository {
     public CompletableFuture<User> getUserByDeviceName(String name){
 
         final CompletableFuture<User> promise = new CompletableFuture<>();
-        DocumentReference docRef = db.collection("users").document(name);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("users").whereEqualTo("deviceName",name)
+        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User u = documentSnapshot.toObject(User.class);
-                promise.complete(u);
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().getDocuments().size() <= 0) {
+                        promise.complete(null);
+                        return;
+                    }
+                    DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                    User u = document.toObject(User.class);
+                    promise.complete(u);
+                } else {
+                    //Log.d(TAG, "Error getting documents: ", task.getException());
+                    promise.complete(null);
+                }
             }
         }).addOnFailureListener(command -> {
             promise.complete(null);
         });
+
         return promise;
     }
 

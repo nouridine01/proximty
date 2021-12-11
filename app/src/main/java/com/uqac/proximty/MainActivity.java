@@ -250,22 +250,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
             return false;
         }
 
-        /*User u = new User();
-        u.setPassword("123");
-        u.setPseudo("test");
-        u.getFriends().add("noor");
-        u.getInterests().add("Lecture");
-        u.setPhoto("profil.png");
 
-        try {
-            userRepository.add(u);
-        } catch (Exception e) {
-            Log.e(TAG,e.getMessage());
-        }
-
-        Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                R.drawable.email);
-        userRepository.addImage("email.png",icon);*/
         return true;
     }
 

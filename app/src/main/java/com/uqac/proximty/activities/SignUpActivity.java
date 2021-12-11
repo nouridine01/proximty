@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
@@ -70,6 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
             //userDao.insertUsers(u);
             UserRepository userRepository = new UserRepository(this);
             try {
+                u.setDeviceName(getDeviceName());
                 userRepository.add(u);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -79,5 +81,9 @@ public class SignUpActivity extends AppCompatActivity {
         }else {
             Toast.makeText(this,"les mots de passes ne correspondent pas",Toast.LENGTH_LONG).show();
         }
+    }
+
+    public String getDeviceName(){
+        return Settings.Global.getString(this.getContentResolver(), "device_name");
     }
 }

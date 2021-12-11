@@ -36,6 +36,18 @@ public class User {
     private List<String> friends = new ArrayList<>();
     private List<String> interests = new ArrayList<>();
 
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    private String deviceName;
+
+
+
     public User() {
     }
 

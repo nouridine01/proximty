@@ -189,7 +189,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 Toast.makeText(getActivity(),  Settings.Global.getString(getActivity().getContentResolver(), "device_name"), Toast.LENGTH_SHORT).show();
             }
 
-            showUserDetailDialo(view);
+            //showUserDetailDialo(view);
         });
 
         // center button position
@@ -318,7 +318,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
 
         ImageView imageView = bottomSheetView.findViewById(R.id.imageProfil);
 
-        CompletableFuture<User> pr= userRepository.getUserByPseudo(prefManager.getUserPseudo());
+        CompletableFuture<User> pr= userRepository.getUserByDeviceName(deviceToConnected.deviceName);
         pr.thenAccept(u->{
             Log.e("test firebase async", u.toString());
             userRepository.getImage(u.getPhoto()).thenAccept(im->{
@@ -343,7 +343,6 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
             notification.setReceverId(u.getPseudo());
             notification.setSenderId(prefManager.getUserPseudo());
         });
-
 
 
         bottomSheetDialog.setContentView(bottomSheetView);

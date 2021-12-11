@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.models.Messages;
 
@@ -32,6 +33,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
 
     Context context;
     ArrayList<Messages> messagesArrayList;
+    PrefManager prefManager;
 
     int ITEM_SEND=1;
     int ITEM_RECIEVE=2;
@@ -39,6 +41,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
     public MessagesAdapter(Context context, ArrayList<Messages> messagesArrayList) {
         this.context = context;
         this.messagesArrayList = messagesArrayList;
+        prefManager=new PrefManager(context);
     }
 
     @NonNull
@@ -54,6 +57,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             View view= LayoutInflater.from(context).inflate(R.layout.recieverchatlayout,parent,false);
             return new RecieverViewHolder(view);
         }
+
     }
 
     @Override
@@ -74,12 +78,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
         }
 
 
-
-
-
-
-
-
     }
 
 
@@ -89,7 +87,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
         Messages messages=messagesArrayList.get(position);
 
         //if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(messages.getSenderId()))
-        String CURENT_USER_ID="02";
+        String CURENT_USER_ID= prefManager.getUserPseudo();
         if(messages.getSenderId().equals(CURENT_USER_ID))
         {
             return  ITEM_SEND;

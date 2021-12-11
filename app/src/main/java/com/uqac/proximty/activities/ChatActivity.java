@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.adaptaters.MessagesAdapter;
 import com.uqac.proximty.models.Messages;
@@ -66,6 +67,7 @@ public class ChatActivity extends AppCompatActivity {
 
     MessagesAdapter messagesAdapter;
     ArrayList<Messages> messagesArrayList;
+    PrefManager prefManager;
 
 
 
@@ -90,6 +92,7 @@ public class ChatActivity extends AppCompatActivity {
         mmessagerecyclerview.setLayoutManager(linearLayoutManager);
         messagesAdapter=new MessagesAdapter(ChatActivity.this,messagesArrayList);
         mmessagerecyclerview.setAdapter(messagesAdapter);
+        prefManager=new PrefManager(this);
 
         intent=getIntent();
         setSupportActionBar(mtoolbarofspecificchat);
@@ -106,8 +109,9 @@ public class ChatActivity extends AppCompatActivity {
         calendar=Calendar.getInstance();
         simpleDateFormat=new SimpleDateFormat("hh:mm a");
         //TODO:: recuperaation automatise
-        msenderuid= "02"; //firebaseAuth.getUid();
-        mrecieveruid= "01"; //mrecieveruid=getIntent().getStringExtra("receiveruid");
+
+        msenderuid= prefManager.getUserPseudo();//msenderuid= "02"; //firebaseAuth.getUid();
+        mrecieveruid= getIntent().getStringExtra("receiveruid"); //mrecieveruid=getIntent().getStringExtra("receiveruid");mrecieveruid= "01";
         mrecievername=getIntent().getStringExtra("name");//mrecievername= "Youssef Zeus" ;
 
         senderroom=msenderuid+mrecieveruid;

@@ -366,7 +366,8 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 deviceToConnected=peers.stream().filter(p->p.deviceName==device_name).findFirst().get();
                 Toast.makeText(getContext(), deviceToConnected.deviceName+" = "+deviceToConnected.deviceAddress, Toast.LENGTH_SHORT).show();
             }
-            connect(device1);
+            //connect(device1);
+            showUserDetailDialo(device1);
 
         });
         device1.setVisibility(View.INVISIBLE);

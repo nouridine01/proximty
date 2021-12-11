@@ -251,6 +251,9 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         }
 
 
+        userRepository.getUserByDeviceName("Infinix HOT 8 Lite").thenAccept(u->{
+            Log.e(TAG, "test devicename " +u.toString());
+        });
         return true;
     }
 

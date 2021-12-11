@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.uqac.proximty.activities.LoginActivity;
 import com.uqac.proximty.broadcasts.WiFiDirectBroadcastReceiver;
 import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.fragments.NotificationFragment;
@@ -139,8 +140,12 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         super.onCreate(savedInstanceState);
         userRepository = new UserRepository(this);
         prefManager = new PrefManager(this);
+        System.out.println(prefManager.isFirstTimeLaunch());
         if (prefManager.isFirstTimeLaunch()) {
             launchWalktroughScreen();
+            finish();
+        } else if (!prefManager.getUserConnected()) {
+            launchLoginActivity();
             finish();
         }
 
@@ -245,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
             return false;
         }
 
-        User u = new User();
+        /*User u = new User();
         u.setPassword("123");
         u.setPseudo("test");
         u.getFriends().add("noor");
@@ -260,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
 
         Bitmap icon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.email);
-        userRepository.addImage("email.png",icon);
+        userRepository.addImage("email.png",icon);*/
         return true;
     }
 
@@ -294,6 +299,10 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
     private void launchWalktroughScreen() {
         prefManager.setFirstTimeLaunch(false);
         startActivity(new Intent(this, WalkthroughActivity.class));
+    }
+
+    private void launchLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
 

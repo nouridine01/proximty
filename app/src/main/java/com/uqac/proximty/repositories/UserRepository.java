@@ -67,8 +67,7 @@ public class UserRepository {
         ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User u = documentSnapshot.toObject(User.class);
-                if(u.getPseudo().equals("")){
+                if(!documentSnapshot.exists()){
                     // Add a new document
                     db.collection("users").document(user.getPseudo()).set(user);
                 }else
@@ -126,6 +125,10 @@ public class UserRepository {
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (!documentSnapshot.exists()) {
+                    promise.complete(null);
+                    return;
+                }
                 User u = documentSnapshot.toObject(User.class);
                 promise.complete(u.getFriends());
             }
@@ -143,6 +146,10 @@ public class UserRepository {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    if (task.getResult().getDocuments().size() <= 0) {
+                        promise.complete(null);
+                        return;
+                    }
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     User u = document.toObject(User.class);
                     promise.complete(u);

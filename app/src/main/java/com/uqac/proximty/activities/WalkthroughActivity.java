@@ -38,6 +38,7 @@ import com.uqac.proximty.entities.UserFriendCrossRef;
 import com.uqac.proximty.entities.UserInterestCrossRef;
 import com.uqac.proximty.entities.UserWithFriends;
 import com.uqac.proximty.entities.UserWithInterests;
+import com.uqac.proximty.repositories.InterestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,37 +154,29 @@ public class WalkthroughActivity extends AppCompatActivity {
         u.setPassword("123");
         userDao.insertUsers(u,u2);*/
 
+        InterestRepository ir = new InterestRepository();
+
         //insertion interest
-        Interest t1 = new Interest();
-        t1.setName("Lecture");
-        Interest t2 = new Interest();
-        t2.setName("Sport");
-        Interest t3 = new Interest();
-        t3.setName("Jeu Vidéo");
-        Interest t4 = new Interest();
-        t4.setName("Voyage");
-        Interest t5 = new Interest();
-        t5.setName("Cinéma & Séries");
-        Interest t6 = new Interest();
-        t6.setName("Cuisine");
-        Interest t7 = new Interest();
-        t7.setName("Sciences");
-        Interest t8 = new Interest();
-        t8.setName("Politique");
-        Interest t9 = new Interest();
-        t9.setName("Mode");
-        Interest t10 = new Interest();
-        t10.setName("Soirées");
-        Interest t11 = new Interest();
-        t11.setName("Photographie");
-        Interest t12 = new Interest();
-        t12.setName("Danse");
-        Interest t13 = new Interest();
-        t13.setName("Théâtre");
-        Interest t14 = new Interest();
-        t14.setName("Arts");
-        Interest t15 = new Interest();
-        t15.setName("Bien-être & santé");
+        try {
+            Interest t1 = new Interest(); t1.setName("Lecture"); ir.add(t1);
+            Interest t2 = new Interest(); t2.setName("Sport"); ir.add(t2);
+            Interest t3 = new Interest(); t3.setName("Jeu Vidéo"); ir.add(t3);
+            Interest t4 = new Interest(); t4.setName("Voyage"); ir.add(t4);
+            Interest t5 = new Interest(); t5.setName("Cinéma & Séries"); ir.add(t5);
+            Interest t6 = new Interest(); t6.setName("Cuisine"); ir.add(t6);
+            Interest t7 = new Interest(); t7.setName("Sciences"); ir.add(t7);
+            Interest t8 = new Interest(); t8.setName("Politique"); ir.add(t8);
+            Interest t9 = new Interest(); t9.setName("Mode"); ir.add(t9);
+            Interest t10 = new Interest(); t10.setName("Soirées"); ir.add(t10);
+            Interest t11 = new Interest(); t11.setName("Photographie"); ir.add(t11);
+            Interest t12 = new Interest(); t12.setName("Danse"); ir.add(t12);
+            Interest t13 = new Interest(); t13.setName("Théâtre"); ir.add(t13);
+            Interest t14 = new Interest(); t14.setName("Arts"); ir.add(t14);
+            Interest t15 = new Interest(); t15.setName("Bien-être & santé"); ir.add(t15);
+            System.out.println("Interests successfully added");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //interestDao.insertInterests(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15);
 

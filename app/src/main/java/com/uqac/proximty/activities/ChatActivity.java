@@ -131,6 +131,7 @@ public class ChatActivity extends AppCompatActivity {
 
         messagesAdapter=new MessagesAdapter(ChatActivity.this,messagesArrayList);
 
+        /**
         Messages messages=new Messages("hello","01",3,"10h22");
         messagesArrayList.add(messages);
         messages=new Messages("Comment tu vas ?","01",3,"10h23");
@@ -141,6 +142,8 @@ public class ChatActivity extends AppCompatActivity {
         messages=new Messages("Ok super","01",3,"10h23");
 
         messagesArrayList.add(messages);
+
+         **/
 
         messagesAdapter.notifyDataSetChanged();
 
@@ -235,13 +238,11 @@ public class ChatActivity extends AppCompatActivity {
 
                      mgetmessage.setText(null);
                     messagesAdapter.notifyDataSetChanged();
-                    /**
+
                     finish();
                     overridePendingTransition( 0, 0);
                     startActivity(getIntent());
                     overridePendingTransition( 0, 0);
-**/
-
 
                 }
             }

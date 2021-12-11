@@ -16,6 +16,7 @@ import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.User;
 import com.uqac.proximty.fragments.Scan_page;
+import com.uqac.proximty.repositories.UserRepository;
 
 
 public class SignUpActivity extends AppCompatActivity {
@@ -67,6 +68,12 @@ public class SignUpActivity extends AppCompatActivity {
         if(password.equals(confirmPassword)){
             u.setPassword(password);
             //userDao.insertUsers(u);
+            UserRepository userRepository = new UserRepository(this);
+            try {
+                userRepository.add(u);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             prefManager.setFirstTimeLaunch(false);
             startActivity(new Intent(this, LoginActivity.class));
         }else {

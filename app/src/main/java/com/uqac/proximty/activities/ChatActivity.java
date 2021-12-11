@@ -28,6 +28,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.uqac.proximty.R;
 import com.uqac.proximty.adaptaters.MessagesAdapter;
@@ -46,8 +52,8 @@ public class ChatActivity extends AppCompatActivity {
     private String enteredmessage;
     Intent intent;
     String mrecievername,sendername,mrecieveruid,msenderuid;
-    //private FirebaseAuth firebaseAuth;
-    //FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
     String senderroom,recieverroom;
 
     ImageButton mbackbuttonofspecificchat;
@@ -92,24 +98,23 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"Toolbar is Clicked",Toast.LENGTH_SHORT).show();
 
-
             }
         });
 
-        //firebaseAuth=FirebaseAuth.getInstance();
-        //firebaseDatabase=FirebaseDatabase.getInstance();
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseDatabase=FirebaseDatabase.getInstance();
         calendar=Calendar.getInstance();
         simpleDateFormat=new SimpleDateFormat("hh:mm a");
-
-        msenderuid= "01";//firebaseAuth.getUid();
-        //mrecieveruid=getIntent().getStringExtra("receiveruid");
-        //mrecievername=getIntent().getStringExtra("name");
+        //TODO:: recuperaation automatise
+        msenderuid= "02"; //firebaseAuth.getUid();
+        mrecieveruid= "01"; //mrecieveruid=getIntent().getStringExtra("receiveruid");
+        mrecievername=getIntent().getStringExtra("name");//mrecievername= "Youssef Zeus" ;
 
         senderroom=msenderuid+mrecieveruid;
         recieverroom=mrecieveruid+msenderuid;
 
 
-        //DatabaseReference databaseReference=firebaseDatabase.getReference().child("chats").child(senderroom).child("messages");
+        DatabaseReference databaseReference=firebaseDatabase.getReference().child("chats").child(senderroom).child("messages");
 
 
         messagesAdapter=new MessagesAdapter(ChatActivity.this,messagesArrayList);
@@ -127,9 +132,10 @@ public class ChatActivity extends AppCompatActivity {
 
         messagesAdapter.notifyDataSetChanged();
 
-        /**
+
 
          databaseReference.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
             messagesArrayList.clear();
@@ -142,12 +148,13 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             @Override
+
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
 
         });
-         **/
+
 
 
 
@@ -159,8 +166,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-        //mnameofspecificuser.setText(mrecievername);
-        mnameofspecificuser.setText("Youssef Zeus");
+        mnameofspecificuser.setText(mrecievername);
         //String uri=intent.getStringExtra("imageuri");
         //String uri=intent.getStringExtra("imageuri");
         if(false)
@@ -187,16 +193,20 @@ public class ChatActivity extends AppCompatActivity {
                 else
                 {
                     Toast.makeText(getApplicationContext(),enteredmessage,Toast.LENGTH_SHORT).show();
-                    /**
 
-                     Date date=new Date();
-                     currenttime=simpleDateFormat.format(calendar.getTime());
-                     Messages messages=new Messages(enteredmessage,firebaseAuth.getUid(),date.getTime(),currenttime);
-                     firebaseDatabase=FirebaseDatabase.getInstance();
-                     firebaseDatabase.getReference().child("chats")
-                     .child(senderroom)
-                     .child("messages")
-                     .push().setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    Date date=new Date();
+                    currenttime=simpleDateFormat.format(calendar.getTime());
+                    //Messages messages=new Messages(enteredmessage,firebaseAuth.getUid(),date.getTime(),currenttime);
+                    Messages messages=new Messages(enteredmessage,msenderuid,date.getTime(),currenttime);
+
+                    firebaseDatabase=FirebaseDatabase.getInstance();
+                    firebaseDatabase.getReference().child("chats")
+                            .child(senderroom)
+                            .child("messages")
+                            .push().setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             firebaseDatabase.getReference()
@@ -216,7 +226,7 @@ public class ChatActivity extends AppCompatActivity {
                      mgetmessage.setText(null);
 
 
-                     **/
+
                 }
             }
         });

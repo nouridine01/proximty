@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             if(u != null){
                 prefManager.setFirstTimeLaunch(false);
                 prefManager.setUserPseudo(u.getPseudo());
+                prefManager.setUserConnected(true);
                 startActivity(new Intent(this, MainActivity.class));
             }else {
                 Toast.makeText(this,"identifiant invalide",Toast.LENGTH_LONG).show();

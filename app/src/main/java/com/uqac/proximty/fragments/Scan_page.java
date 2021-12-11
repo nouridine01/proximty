@@ -50,6 +50,7 @@ import androidx.fragment.app.Fragment;
 
 import com.skyfishjy.library.RippleBackground;
 import com.uqac.proximty.MainActivity;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 
 import java.io.IOException;
@@ -66,7 +67,9 @@ import java.util.concurrent.CompletableFuture;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.activities.ChatActivity;
+import com.uqac.proximty.entities.MNotification;
 import com.uqac.proximty.entities.User;
+import com.uqac.proximty.repositories.NotificationRepository;
 import com.uqac.proximty.repositories.UserRepository;
 import com.uqac.proximty.sockets.Client;
 import com.uqac.proximty.sockets.ServeurMT;
@@ -96,6 +99,7 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
     Map<String,Socket> sockets = new HashMap<String,Socket>();
 
     private boolean scan = true;
+    PrefManager prefManager;
 
 
 
@@ -166,10 +170,12 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         });
     }
 
+
     private void initialSetup(View view) {
 
         serveurMT = new ServeurMT(getActivity());
         userRepository=new UserRepository(getActivity());
+        prefManager=new PrefManager(getActivity());
         // layout files
         rippleBackground = (RippleBackground) view.findViewById(R.id.content);
         centerDeviceIcon = (ImageView) view.findViewById(R.id.centerImage);
@@ -211,9 +217,9 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         if (info.groupFormed && info.isGroupOwner) {
             Toast.makeText(getActivity(), "final step. client "+info.groupOwnerAddress, Toast.LENGTH_SHORT).show();
             //comportement client
-            Socket serveur = null;
+            //Socket serveur = null;
             //showUserDetailDialo(deviceClickedView);
-            try {
+            /*try {
                 serveur = new Socket(info.groupOwnerAddress, ServeurMT.port);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -280,6 +286,8 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
 
     private void showUserDetailDialo(View view) {
 
+        MNotification notification = new MNotification();
+
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                 view.getContext(), R.style.BottomSheetDialogTheme);
         bottomSheetView = LayoutInflater.from(view.getContext())
@@ -296,13 +304,20 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         bottomSheetView.findViewById(R.id.imageViewConfirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), ChatActivity.class));
+                //startActivity(new Intent(view.getContext(), ChatActivity.class));
+                //doit creer une notification
+
+                NotificationRepository notificationRepository = new NotificationRepository();
+                notificationRepository.add(notification);
+
+                Toast.makeText(view.getContext(), "Demande de relation envoyée", Toast.LENGTH_SHORT).show();
+
             }
         });
 
         ImageView imageView = bottomSheetView.findViewById(R.id.imageProfil);
 
-        CompletableFuture<User> pr= userRepository.getUserByPseudo("noor");
+        CompletableFuture<User> pr= userRepository.getUserByPseudo(prefManager.getUserPseudo());
         pr.thenAccept(u->{
             Log.e("test firebase async", u.toString());
             userRepository.getImage(u.getPhoto()).thenAccept(im->{
@@ -320,6 +335,12 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
                 textInteret.setText(i);
                 gridLayoutInterte.addView(textInteret);
             });
+
+            notification.setPseudo(prefManager.getUserPseudo());
+            notification.setAccepted(false);
+            notification.setPending(true);
+            notification.setReceverId(u.getPseudo());
+            notification.setSenderId(prefManager.getUserPseudo());
         });
 
 

@@ -42,7 +42,11 @@
         <entry key="app/src/main/res/drawable/senderchatdrawable.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/font/poppins.xml" value="0.15052083333333333" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.18" />
+<<<<<<< HEAD
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14492753623188406" />
+=======
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+>>>>>>> d29559c744078e6cb0190691e32cacfddcd1b47d
         <entry key="app/src/main/res/layout/activity_users.xml" value="0.1671195652173913" />
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.1671195652173913" />
         <entry key="app/src/main/res/layout/item_contact.xml" value="0.33" />

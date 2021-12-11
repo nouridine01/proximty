@@ -12,6 +12,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<<<<<<< HEAD
+=======
+
+>>>>>>> d29559c744078e6cb0190691e32cacfddcd1b47d
 
     <application
         android:name=".HiltApp"

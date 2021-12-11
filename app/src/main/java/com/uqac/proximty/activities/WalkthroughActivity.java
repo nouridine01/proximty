@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uqac.proximty.MainActivity;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.InterestDao;
@@ -38,13 +39,12 @@ import com.uqac.proximty.entities.UserFriendCrossRef;
 import com.uqac.proximty.entities.UserInterestCrossRef;
 import com.uqac.proximty.entities.UserWithFriends;
 import com.uqac.proximty.entities.UserWithInterests;
+import com.uqac.proximty.repositories.InterestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WalkthroughActivity extends AppCompatActivity {
-
-
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
@@ -56,6 +56,7 @@ public class WalkthroughActivity extends AppCompatActivity {
     InterestDao interestDao;
     UserInterestCrossRefDao userInterestCrossRefDao;
     UserFriendCrossRefDao userFriendCrossRefDao;
+    PrefManager prefManager;
 
 
     @Override
@@ -67,6 +68,8 @@ public class WalkthroughActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
+
+        prefManager = new PrefManager(this);
 
         viewPager =  findViewById(R.id.view_pager);
         dotsLayout =  findViewById(R.id.layoutDots);
@@ -137,115 +140,13 @@ public class WalkthroughActivity extends AppCompatActivity {
     private void initialisation(){
         //initialisation
 
-        //userDao=AppDatabase.getDatabase(this).userDao();
-        //interestDao=AppDatabase.getDatabase(this).interestDao();
-        //userFriendCrossRefDao=AppDatabase.getDatabase(this).userFriendCrossRefDao();
-        //userInterestCrossRefDao=AppDatabase.getDatabase(this).userInterestCrossRefDao();
-        // insertion users
-        /*User u = new User();
-        u.setLastName("nouridine");
-        u.setFirstName("oumarou");
-        u.setPseudo("noor");
-        u.setPassword("123");
 
-        User u2 = new User();
-        u2.setLastName("bili");
-        u2.setFirstName("oumar");
-        u2.setPseudo("bili");
-        u.setPassword("123");
-        userDao.insertUsers(u,u2);*/
-
-        //insertion interest
-        Interest t1 = new Interest();
-        t1.setName("Lecture");
-        Interest t2 = new Interest();
-        t2.setName("Sport");
-        Interest t3 = new Interest();
-        t3.setName("Jeu Vidéo");
-        Interest t4 = new Interest();
-        t4.setName("Voyage");
-        Interest t5 = new Interest();
-        t5.setName("Cinéma & Séries");
-        Interest t6 = new Interest();
-        t6.setName("Cuisine");
-        Interest t7 = new Interest();
-        t7.setName("Sciences");
-        Interest t8 = new Interest();
-        t8.setName("Politique");
-        Interest t9 = new Interest();
-        t9.setName("Mode");
-        Interest t10 = new Interest();
-        t10.setName("Soirées");
-        Interest t11 = new Interest();
-        t11.setName("Photographie");
-        Interest t12 = new Interest();
-        t12.setName("Danse");
-        Interest t13 = new Interest();
-        t13.setName("Théâtre");
-        Interest t14 = new Interest();
-        t14.setName("Arts");
-        Interest t15 = new Interest();
-        t15.setName("Bien-être & santé");
-
-        //interestDao.insertInterests(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15);
-
-        /*//creation friend
-        UserFriendCrossRef userFriendCrossRef = new UserFriendCrossRef();
-        userFriendCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
-        userFriendCrossRef.setFriend(userDao.getUserByPseudo("bili").getUid());
-        //userFriendCrossRefDao.insertUserFriendCrossRef(userFriendCrossRef);*/
-
-        //attribute interest
-        /*UserInterestCrossRef userInterestCrossRef=new UserInterestCrossRef();
-        userInterestCrossRef.setUid(userDao.getUserByPseudo("noor").getUid());
-        userInterestCrossRef.setId(interestDao.getInterestByName("Lecture").getId());
-        userInterestCrossRefDao.insertUserInterestCrossRef(userInterestCrossRef);*/
-
-
-        /*List<User> list=new ArrayList<>();
-        try {
-            System.out.println("----------------list users----------------");
-            userDao.getAll().forEach(user->{
-                System.out.println(user.toString());
-
-            });
-
-            System.out.println("----------------list interests----------------");
-            interestDao.getAll().forEach(in->{
-                System.out.println(in.toString());
-
-            });
-
-            System.out.println("----------------list user friend cross ref----------------");
-            userFriendCrossRefDao.getAll().forEach(i->{
-                System.out.println(i.toString());
-
-            });
-
-            User c = userDao.connexion("noor","123");
-            System.out.println("----------------connection----------------");
-            System.out.println(c.toString());
-
-            System.out.println("----------------user friends----------------");
-            //UserWithFriends userWithFriends = userDao.getUserWithFriends(userDao.getUserByPseudo("noor").getUid());
-            //System.out.println(userWithFriends.friends.get(0).toString());
-
-            System.out.println("----------------user interests----------------");
-            UserWithInterests userWithInterests = userDao.getUserWithInterests(userDao.getUserByPseudo("noor").getUid());
-            System.out.println(userWithInterests.interests.get(0).getName());
-
-
-
-
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }*/
     }
 
     private void launchHomeScreen() {
-        //prefManager.setFirstTimeLaunch(false);
+        prefManager.setFirstTimeLaunch(false);
         startActivity(new Intent(this, LoginActivity.class));
-        //finish();
+        finish();
     }
 
     //  viewpager change listener

@@ -55,6 +55,7 @@ public class ContactsAdapter extends
         ImageView imageView;
 
 
+
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {

@@ -114,10 +114,12 @@ public class ProfilFragment extends Fragment {
         int imageResource = getResources().getIdentifier(uri, null, getActivity().getPackageName());
 
         photo = (ImageView) view.findViewById(R.id.photo);
-        @SuppressLint("UseCompatLoadingForDrawables") Drawable dr = getResources().getDrawable(imageResource);
-        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-        Drawable res = new BitmapDrawable(getResources(), bitmap);
-        photo.setImageDrawable(res);
+
+        userRepository.getImage(user.getPhoto()).thenAccept(im->{
+            if(im!=null)
+                photo.setImageBitmap((Bitmap) im);
+            else photo.setImageResource(R.drawable.email);
+        });
 
         lastName = (TextView) view.findViewById(R.id.nom);
         lastName.setText(user.getLastName());

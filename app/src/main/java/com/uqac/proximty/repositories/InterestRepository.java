@@ -24,10 +24,10 @@ public class InterestRepository {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public void add(Interest interest) throws Exception {
-        DocumentReference ref = db.collection("interests").document(interest.getName());
+        DocumentReference ref = db.collection("interest").document(interest.getName());
         if(ref == null){
             // Add a new document
-            db.collection("interests").document(interest.getName()).set(interest);
+            db.collection("interest").document(interest.getName()).set(interest);
         }else throw new Exception("interest exists");
     }
 
@@ -36,7 +36,7 @@ public class InterestRepository {
     public CompletableFuture<List<Interest>> getAll(){
         final CompletableFuture<List<Interest>> promise = new CompletableFuture<>();
         List<Interest> list = new ArrayList<>();
-        db.collection("interests")
+        db.collection("interest")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -59,7 +59,7 @@ public class InterestRepository {
 
 
     public void delete(Interest interest){
-        db.collection("users").document(interest.getName())
+        db.collection("interest").document(interest.getName())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

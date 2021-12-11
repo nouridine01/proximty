@@ -80,10 +80,11 @@ public class ModificationActivity extends AppCompatActivity {
         int imageResource = getResources().getIdentifier(uri, null, getPackageName());
 
         photo = (ImageView) view.findViewById(R.id.photo);
-        @SuppressLint("UseCompatLoadingForDrawables") Drawable dr = getResources().getDrawable(imageResource);
-        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-        Drawable res = new BitmapDrawable(getResources(), bitmap);
-        photo.setImageDrawable(res);
+        userRepository.getImage(user.getPhoto()).thenAccept(im->{
+            if(im!=null)
+                photo.setImageBitmap((Bitmap) im);
+            else photo.setImageResource(R.drawable.email);
+        });
 
         modifPhoto = (Button) view.findViewById(R.id.modifPhoto);
         modifPhoto.setOnClickListener(view2 -> {
@@ -148,6 +149,7 @@ public class ModificationActivity extends AppCompatActivity {
             userPicture = selectedImage;
             Drawable res = new BitmapDrawable(getResources(), selectedImage);
             photo.setImageDrawable(res);
+            // mettre a jour l'image
         }
     }
 

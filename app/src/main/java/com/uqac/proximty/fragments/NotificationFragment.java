@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.skyfishjy.library.RippleBackground;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.adaptaters.NotificationAdapter;
 import com.uqac.proximty.entities.MNotification;
+import com.uqac.proximty.repositories.NotificationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +37,8 @@ public class NotificationFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    PrefManager prefManager;
 
 
     public NotificationFragment() {
@@ -77,6 +82,7 @@ public class NotificationFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        prefManager = new PrefManager(getActivity());
         super.onViewCreated(view, savedInstanceState);
         initialSetup(view);
     }
@@ -86,15 +92,42 @@ public class NotificationFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         notificationRecycle.setLayoutManager(linearLayoutManager); // s
 
+        NotificationRepository notificationRepository = new NotificationRepository();
+
+        CompletableFuture<List<String>> idNotificationList = notificationRepository.getNotificationsIdFromUserPseudo(prefManager.getUserPseudo());
         List<MNotification> notificationList = new ArrayList<>();
-        notificationList.add(new MNotification("niki","rnie.png"));
+
+
+        /*notificationList.add(new MNotification("niki","rnie.png"));
         notificationList.add(new MNotification("miki","rnie.png"));
         MNotification mn=new MNotification("Dada Kmaog","rnie.png");
         mn.setAccepted(true);
         mn.setPending(true);
-        notificationList.add(mn);
-        NotificationAdapter customAdapter = new NotificationAdapter(notificationList);
-        notificationRecycle.setAdapter(customAdapter); // set the Adapter to RecyclerView
+        notificationList.add(mn);*/
+
+        idNotificationList.thenAccept(idList ->{
+            //on affiche chaque user en fonction de leur pseudo
+            int listSize = idList.size() - 1;
+
+            for(int i = 0; i < idList.size(); i++) {
+                CompletableFuture<MNotification> myNotification = notificationRepository.getNotificationFromId(idList.get(i));
+
+                //affichage de leur pseudo en utilisant l'user
+
+                int finalI = i;
+                myNotification.thenAccept(notif ->{
+
+                    //ici tu remplies avec ta lsite de contact
+                    notificationList.add(notif);
+
+                    if(finalI == listSize){
+                        NotificationAdapter customAdapter = new NotificationAdapter(notificationList);
+                        notificationRecycle.setAdapter(customAdapter); // set the Adapter to RecyclerView
+                    }
+
+                });
+            };
+        });
 
     }
 

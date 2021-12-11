@@ -19,7 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.uqac.proximty.MainActivity;
+
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
@@ -28,12 +28,16 @@ import com.uqac.proximty.entities.Interest;
 import com.uqac.proximty.entities.User;
 
 import java.io.ByteArrayOutputStream;
+
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
 import java.util.concurrent.ExecutionException;
+
 
 public class UserRepository {
     private UserDao userDao;
@@ -41,16 +45,20 @@ public class UserRepository {
     FirebaseStorage storage = FirebaseStorage.getInstance("gs://proximty-d72e1.appspot.com");
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     User user = null;
+
     List<CompletableFuture<User>> friendsList = new ArrayList<CompletableFuture<User>>();
+
 
     public UserRepository(Context context) {
         //this.userDao = AppDatabase.getDatabase(context).userDao();
 
     }
 
-    public User getConnectedUser(String pseudo){
-        return null;//userDao.getUserById(id);
-        //utiliser get by user pseudo
+    public void getConnectedUser(String pseudo ,GetUserCallback userCallback){
+        CompletableFuture<User> promise = getUserByPseudo(pseudo);
+        promise.thenAccept(user1 -> {
+            userCallback.onCallback(user1);
+        });
     }
 
     public void add(User user) throws Exception {
@@ -59,8 +67,7 @@ public class UserRepository {
         ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User u = documentSnapshot.toObject(User.class);
-                if(u.getPseudo().equals("")){
+                if(!documentSnapshot.exists()){
                     // Add a new document
                     db.collection("users").document(user.getPseudo()).set(user);
                 }else
@@ -94,6 +101,7 @@ public class UserRepository {
     }
 
     public CompletableFuture<User> getUserByPseudo(String pseudo){
+
         final CompletableFuture<User> promise = new CompletableFuture<>();
 
         DocumentReference docRef = db.collection("users").document(pseudo);
@@ -117,6 +125,10 @@ public class UserRepository {
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (!documentSnapshot.exists()) {
+                    promise.complete(null);
+                    return;
+                }
                 User u = documentSnapshot.toObject(User.class);
                 promise.complete(u.getFriends());
             }
@@ -130,10 +142,14 @@ public class UserRepository {
     public CompletableFuture<User> connexion(String pseudo, String pwd){
         final CompletableFuture<User> promise = new CompletableFuture<>();
         db.collection("users").whereEqualTo("pseudo",pseudo).whereEqualTo("password",pwd)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    if (task.getResult().getDocuments().size() <= 0) {
+                        promise.complete(null);
+                        return;
+                    }
                     DocumentSnapshot document = task.getResult().getDocuments().get(0);
                     User u = document.toObject(User.class);
                     promise.complete(u);
@@ -244,7 +260,6 @@ public class UserRepository {
     public CompletableFuture<User> getUserByDeviceName(String name){
 
         final CompletableFuture<User> promise = new CompletableFuture<>();
-
         DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -257,4 +272,6 @@ public class UserRepository {
         });
         return promise;
     }
+
+
 }

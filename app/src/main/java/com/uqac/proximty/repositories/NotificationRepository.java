@@ -1,5 +1,10 @@
 package com.uqac.proximty.repositories;
 
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -13,19 +18,44 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.uqac.proximty.entities.MNotification;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
 
 public class NotificationRepository {
     FirebaseStorage storage = FirebaseStorage.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    //CRUD
 
     public void add(MNotification notification){
         DocumentReference newNotificationRef = db.collection("notification").document();
         notification.setId(newNotificationRef.getId());
         newNotificationRef.set(notification);
     }
+
+    public CompletableFuture<List<String>> getNotificationsIdFromUserPseudo(String pseudo){
+        final CompletableFuture<List<String>> promise = new CompletableFuture<>();
+        List<String> notifId = new ArrayList<String>();
+
+        db.collection("notification").whereEqualTo("receverId", pseudo)
+        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            //Log.d(TAG, document.getId() + " => " + document.getData());
+                            notifId.add(document.getId());
+                        }
+                    } else {
+                        //Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                    promise.complete(notifId);
+                }
+        });
+
+        return promise;
+    }
+
 
     public CompletableFuture<MNotification> getNotificationFromId(String Id){
         final CompletableFuture<MNotification> promise = new CompletableFuture<>();
@@ -103,4 +133,5 @@ public class NotificationRepository {
                     }
                 });
     }
+
 }

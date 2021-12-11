@@ -11,10 +11,10 @@ import com.uqac.proximty.entities.UserFriendCrossRef;
 import java.util.List;
 
 
-@Dao
+//@Dao
 public interface UserFriendCrossRefDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertUserFriendCrossRef(UserFriendCrossRef... UserFriendCrossRefs);
     @Query("SELECT * FROM UserFriendCrossRef")
-    List<UserFriendCrossRef> getAll();
+    List<UserFriendCrossRef> getAll();*/
 }

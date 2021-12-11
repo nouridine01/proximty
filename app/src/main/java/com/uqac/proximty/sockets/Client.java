@@ -21,23 +21,22 @@ import java.util.Scanner;
 
 public class Client extends Thread{
 
-    private Socket serveur;
+	private Socket serveur;
 
-    private Socket client;
+	private Socket client;
 
-    private Context context;
+	private Context context;
 
-    private boolean info =false;
-
-
+	private boolean info =false;
 
 
-    public Client(Socket serveur, Context context, boolean info){
-        //this.client=client;
-        this.serveur=serveur;
-        this.context=context;
-        this.info=info;
-    }
+	public Client(Socket serveur, Context context, boolean info){
+		//this.client=client;
+		this.serveur=serveur;
+		this.context=context;
+		this.info=info;
+	}
+
 
 
     @Override
@@ -89,7 +88,6 @@ public class Client extends Thread{
 				String message = br.readLine();
 				//Toast.makeText(context,"identifiant invalide",Toast.LENGTH_LONG).show();
 			}*/
-
 
 
         } catch (UnknownHostException e) {

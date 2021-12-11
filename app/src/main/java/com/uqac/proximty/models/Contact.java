@@ -6,6 +6,7 @@ public class Contact {
 
     private String mName;
     private boolean mOnline;
+    private String firebaseId;
 
     public Contact(String name, boolean online) {
         mName = name;
@@ -18,6 +19,14 @@ public class Contact {
 
     public boolean isOnline() {
         return mOnline;
+    }
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
     }
 
     private static int lastContactId = 0;

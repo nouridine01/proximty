@@ -3,9 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.uqac.proximty">
 
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        tools:ignore="CoarseFineLocation" />
+    <uses-sdk android:minSdkVersion="28" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
     <application
         android:name=".HiltApp"
@@ -15,6 +22,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Proximty">
+        <activity
+            android:name=".activities.ModificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Proximty.NoActionBar"/>
+        <activity
+            android:name=".activities.ChatActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Proximty.NoActionBar" />
         <activity
             android:name=".activities.WalkthroughActivity"
             android:noHistory="true"
@@ -39,9 +54,7 @@
         </activity>
         <activity
             android:name=".activities.TabActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>

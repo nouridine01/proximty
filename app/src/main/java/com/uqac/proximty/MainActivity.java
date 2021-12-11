@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 
 import com.google.android.material.tabs.TabLayout;
+import com.uqac.proximty.activities.LoginActivity;
 import com.uqac.proximty.broadcasts.WiFiDirectBroadcastReceiver;
 import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.fragments.NotificationFragment;
@@ -86,13 +87,12 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
     private final IntentFilter intentFilter = new IntentFilter();
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
+
+
     private PrefManager prefManager;
     private UserRepository userRepository;
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private TabAdapter adapter;
-
 
     public TabAdapter getAdapter() {
         return adapter;
@@ -118,6 +118,14 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         this.channel = channel;
     }
 
+
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
+
+
+
     public PrefManager getPrefManager() {
         return prefManager;
     }
@@ -132,8 +140,12 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         super.onCreate(savedInstanceState);
         userRepository = new UserRepository(this);
         prefManager = new PrefManager(this);
+        System.out.println(prefManager.isFirstTimeLaunch());
         if (prefManager.isFirstTimeLaunch()) {
             launchWalktroughScreen();
+            finish();
+        } else if (!prefManager.getUserConnected()) {
+            launchLoginActivity();
             finish();
         }
 
@@ -183,45 +195,6 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
             // onRequestPermissionsResult(int, String[], int[]) overridden method
         }
 
-    }
-
-    public void setDeviceName(String devName) {
-        try {
-            Class[] paramTypes = new Class[3];
-            paramTypes[0] = WifiP2pManager.Channel.class;
-            paramTypes[1] = String.class;
-            paramTypes[2] = WifiP2pManager.ActionListener.class;
-            Method setDeviceName = manager.getClass().getMethod(
-                    "setDeviceName", paramTypes);
-            setDeviceName.setAccessible(true);
-
-            Object arglist[] = new Object[3];
-            arglist[0] = channel;
-            arglist[1] = devName;
-            arglist[2] = new WifiP2pManager.ActionListener() {
-
-                @Override
-                public void onSuccess() {
-                    System.out.println("setDeviceName succeeded");
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                    System.out.println("setDeviceName failed");
-                }
-            };
-
-            setDeviceName.invoke(manager, arglist);
-
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -277,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
             return false;
         }
 
-        User u = new User();
+        /*User u = new User();
         u.setPassword("123");
         u.setPseudo("test");
         u.getFriends().add("noor");
@@ -292,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
 
         Bitmap icon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.email);
-        userRepository.addImage("email.png",icon);
+        userRepository.addImage("email.png",icon);*/
         return true;
     }
 
@@ -323,10 +296,13 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
 
     }
 
-
     private void launchWalktroughScreen() {
         prefManager.setFirstTimeLaunch(false);
         startActivity(new Intent(this, WalkthroughActivity.class));
+    }
+
+    private void launchLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
 
@@ -435,10 +411,5 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
                     Toast.LENGTH_LONG).show();
         }
     }
-
-
-
-
-
 
 }

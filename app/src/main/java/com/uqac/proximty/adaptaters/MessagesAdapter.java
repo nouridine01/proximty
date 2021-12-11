@@ -89,7 +89,8 @@ public class MessagesAdapter extends RecyclerView.Adapter {
         Messages messages=messagesArrayList.get(position);
 
         //if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(messages.getSenderId()))
-        if(messages.getSenderId().equals("01"))
+        String CURENT_USER_ID="02";
+        if(messages.getSenderId().equals(CURENT_USER_ID))
         {
             return  ITEM_SEND;
         }
@@ -103,8 +104,6 @@ public class MessagesAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return messagesArrayList.size();
     }
-
-
 
 
     class SenderViewHolder extends RecyclerView.ViewHolder

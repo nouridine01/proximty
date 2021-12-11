@@ -15,6 +15,8 @@ package com.uqac.proximty;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.uqac.proximty.entities.User;
+
 public class PrefManager {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -24,6 +26,7 @@ public class PrefManager {
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String USER_PSEUDO = "UserPseudo";
+    private static final String USER_CONNECTED = "UserConnected";
 
     // shared pref mode
     int PRIVATE_MODE = 0;
@@ -51,11 +54,20 @@ public class PrefManager {
     }
 
     public String getUserPseudo() {
-        return pref.getString(USER_PSEUDO,"");
+        return pref.getString(USER_PSEUDO,"test");
     }
 
     public void setUserPseudo(String pseudo) {
         editor.putString(USER_PSEUDO,pseudo);
+        editor.commit();
+    }
+
+    public boolean getUserConnected() {
+        return pref.getBoolean(USER_CONNECTED, false);
+    }
+
+    public void setUserConnected(boolean newVal) {
+        editor.putBoolean(USER_CONNECTED, newVal);
         editor.commit();
     }
 }

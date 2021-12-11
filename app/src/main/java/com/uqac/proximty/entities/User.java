@@ -91,6 +91,10 @@ public class User {
         return friends;
     }
 
+    public void addFriend(String pseudo) {
+        friends.add(pseudo);
+    }
+
     public void setFriends(List<String> friends) {
         this.friends = friends;
     }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.uqac.proximty.MainActivity;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.adaptaters.ContactsAdapter;
 import com.uqac.proximty.entities.User;
@@ -21,8 +22,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class Contact_page extends Fragment {
 
+    PrefManager prefManager;
     public Contact_page() {
-
     }
 
     @Override
@@ -42,6 +43,7 @@ public class Contact_page extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        prefManager = new PrefManager(getActivity());
         populateContacts(view);
     }
 
@@ -50,11 +52,11 @@ public class Contact_page extends Fragment {
         RecyclerView rvContacts = (RecyclerView) view.findViewById(R.id.rvContacts);
 
         // Initialize contacts
-        UserRepository userRepository = new UserRepository(getContext());
+        UserRepository userRepository = new UserRepository(getActivity());
         //récupération de la liste des pseudos
         MainActivity activity= (MainActivity) getActivity();
-        CompletableFuture<List<String>> pseudoFriendList = userRepository.getFriendsFromUserPseudo(activity.getPrefManager().getUserPseudo());
-        ArrayList<User> users = new ArrayList<User>();
+        CompletableFuture<List<String>> pseudoFriendList = userRepository.getFriendsFromUserPseudo(prefManager.getUserPseudo());
+        List<User> users = new ArrayList<User>();
 
         pseudoFriendList.thenAccept(pseudoList ->{
             //on affiche chaque user en fonction de leur pseudo
@@ -77,6 +79,9 @@ public class Contact_page extends Fragment {
                         ContactsAdapter adapter = new ContactsAdapter(users);
                         // Attach the adapter to the recyclerview to populate items
                         rvContacts.setAdapter(adapter);
+                        // Set layout manager to position the items
+                        rvContacts.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+                        // That's all!
                     }
 
                 });
@@ -84,9 +89,6 @@ public class Contact_page extends Fragment {
         });
 
 
-        // Set layout manager to position the items
-        rvContacts.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        // That's all!
     }
 
 }

@@ -8,10 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.entities.MNotification;
+import com.uqac.proximty.entities.User;
+import com.uqac.proximty.repositories.UserRepository;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,10 +36,13 @@ public class NotificationAdapter extends RecyclerView.Adapter{
     private List<MNotification> notificationList;
     int ITEM_PENDING=1;
     int ITEM_ACCEPTED=2;
+    PrefManager prefManager;
 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        prefManager = new PrefManager(parent.getContext());
 
         if(viewType==ITEM_PENDING)
         {
@@ -72,7 +79,7 @@ public class NotificationAdapter extends RecyclerView.Adapter{
         if(holder.getClass()== NotificationAdapter.AcceptedHolder.class)
         {
             NotificationAdapter.AcceptedHolder viewHolder=(NotificationAdapter.AcceptedHolder)holder;
-            //viewHolder.textViewmessaage.setText(messages.getMessage());
+            //viewHolder.textViewmessage.setText(messages.getMessage());
             viewHolder.textViewPseudo.setText(notification.getPseudo());
 
         }
@@ -86,6 +93,23 @@ public class NotificationAdapter extends RecyclerView.Adapter{
                 public void onClick(View view) {
                     //TODO:: envoyer a ce niveau le message envoyer par la personne
                     System.out.println("Confirm button for:"+ notification.getPseudo());
+
+                    UserRepository userRepository = new UserRepository(view.getContext());
+
+                    CompletableFuture<User> connectedUser = userRepository.getUserByPseudo(prefManager.getUserPseudo());
+
+                    connectedUser.thenAccept(u ->{
+                        u.addFriend(notification.getPseudo());
+                        userRepository.update(u);
+
+                        CompletableFuture<User> notificationUser = userRepository.getUserByPseudo(notification.getPseudo());
+
+                        notificationUser.thenAccept(nUser ->{
+                            nUser.addFriend(u.getPseudo());
+                            userRepository.update(nUser);
+                        });
+                    });
+                    Toast.makeText(view.getContext(), "Relation acceptée", Toast.LENGTH_SHORT).show();
                 }
             });
             viewHolder.cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -134,8 +158,6 @@ public class NotificationAdapter extends RecyclerView.Adapter{
         public ImageView imageView ;
         public AcceptedHolder(View itemView) {
             super(itemView);
-
-            // get the reference of item view's
             textViewPseudo = (TextView) itemView.findViewById(R.id.pseudo);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
         }

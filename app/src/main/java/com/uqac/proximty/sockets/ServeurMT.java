@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
+import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.User;
@@ -28,6 +29,7 @@ import java.util.List;
 
 //a demarrer lors du lancement du scannage
 public class ServeurMT extends Thread{
+
     public static final int port = 8988;
     public static final String INFO = "info";
     private int nb =0;
@@ -123,17 +125,28 @@ public class ServeurMT extends Thread{
                 //tranmission des info perso du profil envoi du non pseudo et interet
                 String lineread = br.readLine();
                 if(lineread.equals(INFO)){
-                    User user=userRepository.getConnectedUser("noor");//prefManager.getUserId()
-                    os.write(user.getPseudo().getBytes(StandardCharsets.UTF_8));
-                    //os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement
-                    Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
-                            R.drawable.profil);
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    os.write(byteArray.length);
-                    os.write(byteArray);
-                    bmp.recycle();
+                    userRepository.getConnectedUser(prefManager.getUserPseudo(), new GetUserCallback() {
+                        @Override
+                        public void onCallback(User user)  {
+                            try {
+                                os.write(user.getPseudo().getBytes(StandardCharsets.UTF_8));
+                                //os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement
+                                Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
+                                        R.drawable.profil);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                byte[] byteArray = stream.toByteArray();
+                                os.write(byteArray.length);
+                                os.write(byteArray);
+                                bmp.recycle();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+
+
 
 						/*UserWithInterests userWithInterests = userDao.getUserWithInterests(user.getUid());
 						os.write(userWithInterests.interests.size());

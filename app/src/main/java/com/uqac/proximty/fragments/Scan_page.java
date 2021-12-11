@@ -297,7 +297,8 @@ public class Scan_page<MapList> extends Fragment implements  WifiP2pManager.Peer
         bottomSheetView.findViewById(R.id.imageViewConfirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), ChatActivity.class));
+                //startActivity(new Intent(view.getContext(), ChatActivity.class));
+                //doit creer une notification
             }
         });
 

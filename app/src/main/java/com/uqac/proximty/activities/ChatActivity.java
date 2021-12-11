@@ -2,6 +2,8 @@ package com.uqac.proximty.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -68,6 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     MessagesAdapter messagesAdapter;
     ArrayList<Messages> messagesArrayList;
     PrefManager prefManager;
+    DatabaseReference databaseReference;
 
 
 
@@ -118,7 +122,7 @@ public class ChatActivity extends AppCompatActivity {
         recieverroom=mrecieveruid+msenderuid;
 
 
-        DatabaseReference databaseReference=firebaseDatabase.getReference().child("chats").child(senderroom).child("messages");
+        databaseReference=firebaseDatabase.getReference().child("chats").child(senderroom).child("messages");
 
 
         messagesAdapter=new MessagesAdapter(ChatActivity.this,messagesArrayList);
@@ -224,14 +228,23 @@ public class ChatActivity extends AppCompatActivity {
                     });
 
                      mgetmessage.setText(null);
-
-
+                    messagesAdapter.notifyDataSetChanged();
+                    /**
+                    finish();
+                    overridePendingTransition( 0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition( 0, 0);
+**/
 
                 }
             }
         });
     }
 
+    public static void hideSoftKeyboard (Activity activity, View view) {
+        InputMethodManager imm =(InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+    }
     @Override
     public void onStart() {
         super.onStart();

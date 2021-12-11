@@ -52,6 +52,7 @@ import com.uqac.proximty.entities.UserWithFriends;
 import com.uqac.proximty.entities.UserWithInterests;
 import com.uqac.proximty.fragments.Contact_page;
 import com.uqac.proximty.models.Contact;
+import com.uqac.proximty.repositories.InterestRepository;
 import com.uqac.proximty.repositories.UserRepository;
 
 import java.lang.reflect.InvocationTargetException;
@@ -140,7 +141,22 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         super.onCreate(savedInstanceState);
         userRepository = new UserRepository(this);
         prefManager = new PrefManager(this);
-        System.out.println(prefManager.isFirstTimeLaunch());
+
+        /*String[] interestStrings = {"Lecture ", "Sport", " Jeu Vidéo  ", "Voyage ", " Cinéma & Séries   ", "Cuisine ", " Sciences ",
+                " Politique  ", "Mode", "Soirées ", " Photographie   ", "Danse", " Théâtre ", "Arts", " Bien-être & santé   ",
+                " Economie  ", "Business ", " Jeux de société   "};
+        InterestRepository ir = new InterestRepository();
+        for (String s : interestStrings) {
+            try {
+                Interest t = new Interest();
+                t.setName(s);
+                ir.add(t);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("Added " + s);
+        }*/
+
         if (prefManager.isFirstTimeLaunch()) {
             launchWalktroughScreen();
             finish();

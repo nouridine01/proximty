@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -25,10 +26,21 @@ public class InterestRepository {
 
     public void add(Interest interest) throws Exception {
         DocumentReference ref = db.collection("interest").document(interest.getName());
-        if(ref == null){
-            // Add a new document
-            db.collection("interest").document(interest.getName()).set(interest);
-        }else throw new Exception("interest exists");
+
+        ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(!documentSnapshot.exists()){
+                    // Add a new document
+                    db.collection("interest").document(interest.getName()).set(interest);
+                }else
+                    try {
+                        throw new Exception("interest exists");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+            }
+        });
     }
 
 

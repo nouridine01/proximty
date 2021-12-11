@@ -118,7 +118,7 @@ public class ProfilFragment extends Fragment {
         userRepository.getImage(user.getPhoto()).thenAccept(im->{
             if(im!=null)
                 photo.setImageBitmap((Bitmap) im);
-            else photo.setImageResource(R.drawable.email);
+            else photo.setImageResource(R.drawable.default_profile_pic);
         });
 
         lastName = (TextView) view.findViewById(R.id.nom);

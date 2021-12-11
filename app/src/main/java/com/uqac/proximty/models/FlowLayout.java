@@ -103,7 +103,7 @@ public class FlowLayout extends ViewGroup {
                     xpos = getPaddingLeft();
                     ypos += line_height;
                 }
-                child.layout(xpos, ypos, xpos + childw, ypos + childh);
+                child.layout(xpos + 16, ypos + 6, xpos + childw, ypos + childh);
                 xpos += childw + lp.width;
             }
         }

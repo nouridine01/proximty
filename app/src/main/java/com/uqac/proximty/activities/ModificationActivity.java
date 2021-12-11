@@ -19,35 +19,29 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.uqac.proximty.MainActivity;
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
-import com.uqac.proximty.callbacks.GetUserCallback;
-import com.uqac.proximty.dao.AppDatabase;
-import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.Interest;
 import com.uqac.proximty.entities.User;
-import com.uqac.proximty.entities.UserWithInterests;
 import com.uqac.proximty.models.FlowLayout;
 import com.uqac.proximty.repositories.InterestRepository;
 import com.uqac.proximty.repositories.UserRepository;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ModificationActivity extends AppCompatActivity {
 
     public final static int PICK_IMAGE = 1;
 
     private User user;
-    Button modifPhoto, save;
-    ImageView photo;
-    EditText lastName, firstName, pseudo, password;
-    FlowLayout interests;
-    ImageButton addInterest;
-    List<Interest> allInterests;
-    List<String> userInterests;
-    Bitmap userPicture;
+    private ImageView photo;
+    private FlowLayout interests;
+    private List<Interest> allInterests;
+    private List<String> userInterests;
+    private Bitmap userPicture;
+    private boolean dirtyBitPic = false;
 
     UserRepository userRepository;
 
@@ -60,33 +54,25 @@ public class ModificationActivity extends AppCompatActivity {
         InterestRepository interestRepository = new InterestRepository();
         interestRepository.getAll().thenAccept(list -> {
             allInterests = list;
-        });
 
-        userRepository = new UserRepository(this);
-        userRepository.getConnectedUser(prefManager.getUserPseudo(), new GetUserCallback() {
-            @Override
-            public void onCallback(User u) {
+            userRepository = new UserRepository(this);
+            userRepository.getConnectedUser(prefManager.getUserPseudo(), u -> {
                 user=u;
                 initialSetup(findViewById(R.id.scrollLayout));
-            }
+            });
         });
-
-
     }
 
     private void initialSetup(View view) {
-        String uri = "@drawable/default_profile_pic";
 
-        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-
-        photo = (ImageView) view.findViewById(R.id.photo);
+        photo = view.findViewById(R.id.photo);
         userRepository.getImage(user.getPhoto()).thenAccept(im->{
             if(im!=null)
-                photo.setImageBitmap((Bitmap) im);
-            else photo.setImageResource(R.drawable.email);
+                photo.setImageBitmap(im);
+            else photo.setImageResource(R.drawable.default_profile_pic);
         });
 
-        modifPhoto = (Button) view.findViewById(R.id.modifPhoto);
+        Button modifPhoto = view.findViewById(R.id.modifPhoto);
         modifPhoto.setOnClickListener(view2 -> {
             // Open picture browser tab
             Intent intent = new Intent();
@@ -96,24 +82,22 @@ public class ModificationActivity extends AppCompatActivity {
             // Set picture link in photoLink is made during return callback
         });
 
-        lastName = (EditText) view.findViewById(R.id.nom);
+        EditText lastName = view.findViewById(R.id.nom);
         lastName.setText(user.getLastName());
 
-        firstName = (EditText) view.findViewById(R.id.prenom);
+        EditText firstName = view.findViewById(R.id.prenom);
         firstName.setText(user.getFirstName());
 
-        pseudo = (EditText) view.findViewById(R.id.pseudo);
+        EditText pseudo = view.findViewById(R.id.pseudo);
         pseudo.setText(user.getPseudo());
 
-        password = (EditText) view.findViewById(R.id.password);
+        EditText password = view.findViewById(R.id.password);
         password.setText(user.getPassword());
 
-        interests = (FlowLayout) view.findViewById(R.id.interests);
+        interests = view.findViewById(R.id.interests);
 
-        addInterest = (ImageButton) view.findViewById(R.id.addInterest);
-        addInterest.setOnClickListener(view2 -> {
-            addInterestSheetDialog(view);
-        });
+        ImageButton addInterest = view.findViewById(R.id.addInterest);
+        addInterest.setOnClickListener(view2 -> addInterestSheetDialog(view));
 
         userInterests = user.getInterests();
         for (Interest interest : allInterests) {
@@ -122,16 +106,24 @@ public class ModificationActivity extends AppCompatActivity {
             }
         }
 
-        save = (Button) view.findViewById(R.id.modify);
+        Button save = view.findViewById(R.id.saveProfile);
         save.setOnClickListener(view2 -> {
             user.setLastName(lastName.getText().toString());
             user.setFirstName(firstName.getText().toString());
             user.setPseudo(pseudo.getText().toString());
             user.setPassword(password.getText().toString());
 
-            userRepository.addImage(user.getPseudo(), userPicture);
+            if (dirtyBitPic) {
+                userRepository.addImage(user.getPseudo(), userPicture);
+                user.setPhoto(user.getPseudo());
+            }
             userRepository.update(user);
+
+            startActivity(new Intent(this, MainActivity.class));
         });
+
+        Button cancel = view.findViewById(R.id.cancel);
+        cancel.setOnClickListener(view1 -> startActivity(new Intent(this, MainActivity.class)));
     }
 
     @Override
@@ -147,9 +139,9 @@ public class ModificationActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             userPicture = selectedImage;
+            dirtyBitPic = true;
             Drawable res = new BitmapDrawable(getResources(), selectedImage);
             photo.setImageDrawable(res);
-            // mettre a jour l'image
         }
     }
 
@@ -157,9 +149,7 @@ public class ModificationActivity extends AppCompatActivity {
     private void createDeleteInterest(View view, Interest interest) {
         Button newInterest = new Button(this);
 
-        newInterest.setOnClickListener(view1 -> {
-            deleteInterestSheetDialog(view, interest, newInterest);
-        });
+        newInterest.setOnClickListener(view1 -> deleteInterestSheetDialog(view, interest, newInterest));
 
         newInterest.setBackground(getResources().getDrawable(R.drawable.interest_button));
         newInterest.setText(interest.getName());
@@ -216,9 +206,11 @@ public class ModificationActivity extends AppCompatActivity {
         newInterest.setBackground(getResources().getDrawable(R.drawable.interest_button));
         newInterest.setText(interest.getName());
 
-        flowView.addView(newInterest, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(params);
+        marginParams.setMargins(16, 16, 16, 16);
+        newInterest.setLayoutParams(marginParams);
+        flowView.addView(newInterest, marginParams);
     }
 
 }

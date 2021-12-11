@@ -76,9 +76,7 @@ public class UserRepository {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
             }
-
         });
 
         /*DocumentReference newCityRef = db.collection("cities").document();

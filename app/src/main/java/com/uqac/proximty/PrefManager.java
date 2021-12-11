@@ -23,7 +23,7 @@ public class PrefManager {
     private static final String PREF_NAME_DEFAULT = "default_pref";
 
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
-    private static final String USER_ID = "UserId";
+    private static final String USER_PSEUDO = "UserPseudo";
 
     // shared pref mode
     int PRIVATE_MODE = 0;
@@ -37,7 +37,7 @@ public class PrefManager {
 
     public void setFirstTimeLaunch(boolean isFirstTime) {
         editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
-        editor.putLong(USER_ID,0);
+        editor.putString(USER_PSEUDO,"UserPseudo");
         editor.commit();
     }
 
@@ -50,12 +50,12 @@ public class PrefManager {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
-    public long getUserId() {
-        return pref.getLong(USER_ID,0);
+    public String getUserPseudo() {
+        return pref.getString(USER_PSEUDO,"test");
     }
 
-    public void setUserId(long userId) {
-        editor.putLong(USER_ID,userId);
+    public void setUserPseudo(String pseudo) {
+        editor.putString(USER_PSEUDO,pseudo);
         editor.commit();
     }
 }

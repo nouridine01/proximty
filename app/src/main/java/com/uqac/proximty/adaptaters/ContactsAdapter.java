@@ -2,7 +2,10 @@ package com.uqac.proximty.adaptaters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
 import android.content.Intent;
+import android.graphics.Bitmap;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+
 import com.uqac.proximty.activities.ChatActivity;
+
+import com.uqac.proximty.entities.User;
+
 import com.uqac.proximty.models.Contact;
 import com.uqac.proximty.R;
+import com.uqac.proximty.repositories.UserRepository;
 
 import java.util.List;
 
@@ -26,11 +33,12 @@ public class ContactsAdapter extends
 
 
     // Store a member variable for the contacts
-    private List<Contact> mContacts;
+    private List<User> mUsers;
+    UserRepository userRepository;
 
     // Pass in the contact array into the constructor
-    public ContactsAdapter(List<Contact> contacts) {
-        mContacts = contacts;
+    public ContactsAdapter(List<User> users) {
+        this.mUsers = users;
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -38,10 +46,15 @@ public class ContactsAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public ImageView imageView;
         public TextView nameTextView, lastMessage;
+
         public TextView txtStatus;
         CardView cardSelect;
+
+        public Button messageButton;
+        ImageView imageView;
+
+
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -50,11 +63,15 @@ public class ContactsAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
-            lastMessage = (TextView) itemView.findViewById(R.id.lastMessage);
             txtStatus = (TextView) itemView.findViewById(R.id.textStatus);
             cardSelect = itemView.findViewById(R.id.cardviewContact);
+
+            userRepository = new UserRepository(itemView.getContext());
+            nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
+            lastMessage = (TextView) itemView.findViewById(R.id.lastMessage);
+            //messageButton = (Button) itemView.findViewById(R.id.message_button);
+            imageView = itemView.findViewById(R.id.imageView);
+
         }
     }
 
@@ -75,21 +92,19 @@ public class ContactsAdapter extends
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Contact contact = mContacts.get(position);
+        User user = mUsers.get(position);
 
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
-        ImageView imageprofile = holder.imageView;
-        //TODO recuperer l'image ici
-        //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(imageprofile);
-        textView.setText(contact.getName());
-        TextView textStatus = holder.txtStatus;
-        if(contact.isOnline() ){
-            textStatus.setText("En ligne");//            textStatus.setText(contact.isOnline() ? "En Ligne" : "Hors Ligne");
-            textStatus.setTextColor(R.color.primaryDarkColor);
-        }else {
-            textStatus.setText("Hors ligne");
-        }
+
+        textView.setText(user.getPseudo());
+        ImageView imageView = (ImageView) holder.imageView;
+
+        userRepository.getImage(user.getPhoto()).thenAccept(im->{
+                if(im!=null) {
+                    imageView.setImageBitmap((Bitmap) im);
+                } else imageView.setImageResource(R.drawable.email);
+         });
 
         /**
          * La personne une personne qui equivaut à une personne ayant accepter de chater,
@@ -99,25 +114,26 @@ public class ContactsAdapter extends
         holder.cardSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Clique sur le "+contact.getName());
+                //System.out.println("Clique sur le "+contact.getName());
                 Intent intent =  new Intent(view.getContext(), ChatActivity.class);
-                intent.putExtra("receiveruid",contact.getFirebaseId());
-                intent.putExtra("name",contact.getName());
-               view.getContext().startActivity(intent);
+                intent.putExtra("receiveruid",user.getPseudo());
+                intent.putExtra("name",user.getPseudo());
+                view.getContext().startActivity(intent);
             }
         });
 
         holder.cardSelect.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                System.out.println("Long clique sur le "+contact.getName());
+                System.out.println("Long clique sur le "+user.getPseudo());
                 return false;
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        return mContacts.size();
+        return mUsers.size();
     }
 }

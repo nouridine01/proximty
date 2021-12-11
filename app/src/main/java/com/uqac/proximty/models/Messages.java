@@ -63,4 +63,11 @@ public class Messages {
         this.currenttime = currenttime;
     }
 
+    public String getReceverId() {
+        return receverId;
+    }
+
+    public void setReceverId(String receverId) {
+        this.receverId = receverId;
+    }
 }

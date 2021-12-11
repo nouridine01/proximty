@@ -30,8 +30,6 @@ public class Client extends Thread{
 	private boolean info =false;
 
 
-
-
 	public Client(Socket serveur, Context context, boolean info){
 		//this.client=client;
 		this.serveur=serveur;
@@ -40,22 +38,23 @@ public class Client extends Thread{
 	}
 
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-		try {
-			System.out.println("connexion avec le serveur");
+
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+
+        try {
+            System.out.println("connexion avec le serveur");
 
 
-			InputStream is = serveur.getInputStream();
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
+            InputStream is = serveur.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
 
-			OutputStream os = serveur.getOutputStream();
-			PrintWriter pw = new PrintWriter(os,true);
-
-			if(info==true){
+            OutputStream os = serveur.getOutputStream();
+            String msg = br.readLine();
+            Toast.makeText(context,"message = " + msg,Toast.LENGTH_LONG).show();
+			/*if(info==true){
 
 				//recup les donnees
 				os.write(ServeurMT.INFO.getBytes(StandardCharsets.UTF_8));
@@ -88,24 +87,23 @@ public class Client extends Thread{
 				System.out.println("nombre envoy�e au serveur");
 				String message = br.readLine();
 				//Toast.makeText(context,"identifiant invalide",Toast.LENGTH_LONG).show();
-			}
+			}*/
 
-			
-			
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			try {
-				serveur.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
-	}
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                serveur.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
 }

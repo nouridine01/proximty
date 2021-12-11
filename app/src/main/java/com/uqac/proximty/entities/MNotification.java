@@ -14,11 +14,11 @@ package com.uqac.proximty.entities;
 public class MNotification {
     private String id;
     private String pseudo;
+    private String senderId;
+    private String receverId;
     private String image;
     private boolean accepted = false;
     private boolean pending = true;
-    private String senderId;
-    private String receverId;
 
     public MNotification() {
     }
@@ -66,5 +66,21 @@ public class MNotification {
 
     public void setPending(boolean pending) {
         this.pending = pending;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    public String getReceverId() {
+        return receverId;
+    }
+
+    public void setReceverId(String receverId) {
+        this.receverId = receverId;
     }
 }

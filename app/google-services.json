@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "203303725736",
-    "project_id": "proximty-61b14",
-    "storage_bucket": "proximty-61b14.appspot.com"
+    "project_number": "385075286074",
+    "project_id": "proximty-d72e1",
+    "storage_bucket": "proximty-d72e1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:203303725736:android:f7ba00e9ebb16abfb0f09d",
+
+        "mobilesdk_app_id": "1:385075286074:android:55072683323bde9d026503",
+
         "android_client_info": {
           "package_name": "com.uqac.proximty"
         }
       },
       "oauth_client": [
         {
-          "client_id": "203303725736-6loglgqva49ulf0kqip24surrkrgnpam.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.uqac.proximty",
-            "certificate_hash": "8ce4ffcc69ee84f58100afb1fb9b9714e81b6af6"
-          }
-        },
-        {
-          "client_id": "203303725736-iu704m385336kvh4ot2cvj671tftdltb.apps.googleusercontent.com",
+
+          "client_id": "385075286074-o66n51p35fmf8t6kdu8fdv2ik89u3tnh.apps.googleusercontent.com",
+
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyADFR7IYOF8e-12kH31PiG55tVSOez9Te4"
+
+          "current_key": "AIzaSyCgnIBrDryNUfslKy9qNyYIQBc0aLiD7eo"
+
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "203303725736-iu704m385336kvh4ot2cvj671tftdltb.apps.googleusercontent.com",
+
+              "client_id": "385075286074-o66n51p35fmf8t6kdu8fdv2ik89u3tnh.apps.googleusercontent.com",
+
               "client_type": 3
             }
           ]

@@ -4,14 +4,21 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(indices = {@Index(value = {"name"},
-        unique = true)})
+/*@Entity(indices = {@Index(value = {"name"},
+        unique = true)})*/
 public class Interest {
-    @PrimaryKey(autoGenerate = true)
+    //@PrimaryKey(autoGenerate = true)
     private long id;
 
     private String name;
 
+    public Interest(){
+
+    }
+
+    public Interest(String name){
+        this.name=name;
+    }
     public long getId() {
         return id;
     }

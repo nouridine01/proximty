@@ -29,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.activities.ModificationActivity;
+import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.InterestDao;
 import com.uqac.proximty.dao.UserDao;
@@ -42,6 +43,7 @@ import com.uqac.proximty.repositories.UserRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -89,9 +91,9 @@ public class ProfilFragment extends Fragment {
         super.onCreate(savedInstanceState);
         prefManager = new PrefManager(getActivity());
         userRepository = new UserRepository(getActivity());
-        user = userRepository.getConnectedUser(prefManager.getUserId());
-        allInterests = AppDatabase.getDatabase(getActivity()).interestDao().getAll();
-        userWithInterests = AppDatabase.getDatabase(getActivity()).userDao().getUserWithInterests(user.getUid());
+
+        //allInterests = AppDatabase.getDatabase(getActivity()).interestDao().getAll();
+        //userWithInterests = AppDatabase.getDatabase(getActivity()).userDao().getUserWithInterests(user.getUid());
     }
 
     @Override
@@ -104,7 +106,16 @@ public class ProfilFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initialSetup(view);
+        CompletableFuture<User> promise = userRepository.getUserByPseudo(prefManager.getUserPseudo());
+
+        userRepository.getConnectedUser(prefManager.getUserPseudo(), new GetUserCallback() {
+            @Override
+            public void onCallback(User u) {
+                user=u;
+                initialSetup(view);
+            }
+        });
+
     }
 
     private void initialSetup(View view) {

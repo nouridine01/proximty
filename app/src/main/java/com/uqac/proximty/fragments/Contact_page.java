@@ -8,17 +8,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.uqac.proximty.MainActivity;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.adaptaters.ContactsAdapter;
+import com.uqac.proximty.entities.User;
 import com.uqac.proximty.models.Contact;
+import com.uqac.proximty.repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class Contact_page extends Fragment {
 
-
+    PrefManager prefManager;
     public Contact_page() {
-
     }
 
     @Override
@@ -38,6 +43,7 @@ public class Contact_page extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        prefManager = new PrefManager(getActivity());
         populateContacts(view);
     }
 
@@ -46,14 +52,43 @@ public class Contact_page extends Fragment {
         RecyclerView rvContacts = (RecyclerView) view.findViewById(R.id.rvContacts);
 
         // Initialize contacts
-        ArrayList<Contact> contacts = Contact.createContactsList(20);
-        // Create adapter passing in the sample user data
-        ContactsAdapter adapter = new ContactsAdapter(contacts);
-        // Attach the adapter to the recyclerview to populate items
-        rvContacts.setAdapter(adapter);
-        // Set layout manager to position the items
-        rvContacts.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        // That's all!
+        UserRepository userRepository = new UserRepository(getActivity());
+        //récupération de la liste des pseudos
+        MainActivity activity= (MainActivity) getActivity();
+        CompletableFuture<List<String>> pseudoFriendList = userRepository.getFriendsFromUserPseudo(prefManager.getUserPseudo());
+        List<User> users = new ArrayList<User>();
+
+        pseudoFriendList.thenAccept(pseudoList ->{
+            //on affiche chaque user en fonction de leur pseudo
+            int listSize = pseudoList.size() - 1;
+
+            for(int i = 0; i < pseudoList.size(); i++) {
+                CompletableFuture<User> myFriend = userRepository.getUserByPseudo(pseudoList.get(i));
+
+                //affichage de leur pseudo en utilisant l'user
+
+                int finalI = i;
+                myFriend.thenAccept(user ->{
+                    System.out.println("friend = " + user.getPseudo());
+
+                    //ici tu remplies avec ta lsite de contact
+                    users.add(user);
+
+                    if(finalI == listSize){
+                        // Create adapter passing in the sample user data
+                        ContactsAdapter adapter = new ContactsAdapter(users);
+                        // Attach the adapter to the recyclerview to populate items
+                        rvContacts.setAdapter(adapter);
+                        // Set layout manager to position the items
+                        rvContacts.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+                        // That's all!
+                    }
+
+                });
+            };
+        });
+
+
     }
 
 }

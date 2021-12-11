@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
+import com.uqac.proximty.callbacks.GetUserCallback;
 import com.uqac.proximty.dao.AppDatabase;
 import com.uqac.proximty.dao.UserDao;
 import com.uqac.proximty.entities.User;
@@ -28,105 +29,126 @@ import java.util.List;
 
 //a demarrer lors du lancement du scannage
 public class ServeurMT extends Thread{
-	public static final int port = 8988;
-	public static final String INFO = "info";
-	private int nb =0;
-	List<Conversation> conversationList = new ArrayList<>();
-	private static UserRepository userRepository;
-	private PrefManager prefManager;
-	AppDatabase appDatabase;
-	UserDao userDao;
-	Context context;
 
-	public ServeurMT(Context context){
-		userRepository = new UserRepository(context);
-		//prefManager = new PrefManager(context);
-		userDao=AppDatabase.getDatabase(context).userDao();
-		this.context=context;
-	}
-	
-	@Override
-	public void run() {
-		try {
-			System.out.println("demarrage du serveur");
-			ServerSocket ss = new ServerSocket(port);
-			
-			while(true) {
-				Socket s = ss.accept();
-				++nb;
-				Conversation c = new Conversation(s,nb,context);
-				conversationList.add(c);
-				c.start();
-			}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	class Conversation extends Thread{
-		private Socket s;
-		private int num;
-		private String message ="";
+    public static final int port = 8988;
+    public static final String INFO = "info";
+    private int nb =0;
+    List<Conversation> conversationList = new ArrayList<>();
+    private static UserRepository userRepository;
+    private PrefManager prefManager;
+    AppDatabase appDatabase;
+    UserDao userDao;
+    Context context;
 
-		Context context;
+    public ServeurMT(Context context){
+        userRepository = new UserRepository(context);
+        //prefManager = new PrefManager(context);
+        //userDao=AppDatabase.getDatabase(context).userDao();
+        this.context=context;
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println("demarrage du serveur");
+            ServerSocket ss = new ServerSocket(port);
+
+            while(true) {
+                Socket s = ss.accept();
+                ++nb;
+                InputStream is = s.getInputStream();
+
+                String ip = s.getRemoteSocketAddress().toString();
+                Toast.makeText(context,"conv lancee : "+"connexion du client "+ip,Toast.LENGTH_LONG).show();
 
 
+                OutputStream os = s.getOutputStream();
+                os.write("success".getBytes(StandardCharsets.UTF_8));
+                //Conversation c = new Conversation(s,nb,context);
+                //conversationList.add(c);
+                //c.start();
+            }
 
 
-		public Socket getS() {
-			return s;
-		}
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
 
-		public void setS(Socket s) {
-			this.s = s;
-		}
+        }
+    }
 
-		public String getMessage() {
-			return message;
-		}
+    class Conversation extends Thread{
+        private Socket s;
+        private int num;
+        private String message ="";
 
-		public void setMessage(String message) {
-			this.message = message;
-		}
+        Context context;
 
-		Conversation(Socket s,int n,Context context){
-			this.s=s;
-			num=n;
-			this.context=context;
-		}
-		@Override
-		public void run() {
 
-				try {
-					InputStream is = s.getInputStream();
-					InputStreamReader isr = new InputStreamReader(is);
-					BufferedReader br = new BufferedReader(isr);
 
-					String ip = s.getRemoteSocketAddress().toString();
-					System.out.println("connexion du client "+ip);
 
-					OutputStream os = s.getOutputStream();
-					PrintWriter pw = new PrintWriter(os,true);
-					Toast.makeText(context,"conv lancee",Toast.LENGTH_LONG).show();
+        public Socket getS() {
+            return s;
+        }
 
-					//tranmission des info perso du profil envoi du non pseudo et interet
-					String lineread = br.readLine();
-					if(lineread.equals(INFO)){
-						User user=userRepository.getConnectedUser(1);//prefManager.getUserId()
-						os.write(user.getPseudo().getBytes(StandardCharsets.UTF_8));
-						//os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement
-						Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
-								R.drawable.profil);
-						ByteArrayOutputStream stream = new ByteArrayOutputStream();
-						bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-						byte[] byteArray = stream.toByteArray();
-						os.write(byteArray.length);
-						os.write(byteArray);
-						bmp.recycle();
+        public void setS(Socket s) {
+            this.s = s;
+        }
 
-						UserWithInterests userWithInterests = userDao.getUserWithInterests(user.getUid());
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        Conversation(Socket s,int n,Context context){
+            this.s=s;
+            num=n;
+            this.context=context;
+        }
+        @Override
+        public void run() {
+
+            try {
+                InputStream is = s.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+
+                String ip = s.getRemoteSocketAddress().toString();
+                System.out.println("connexion du client "+ip);
+
+                OutputStream os = s.getOutputStream();
+                Toast.makeText(context,"conv lancee",Toast.LENGTH_LONG).show();
+
+                //tranmission des info perso du profil envoi du non pseudo et interet
+                String lineread = br.readLine();
+                if(lineread.equals(INFO)){
+                    userRepository.getConnectedUser(prefManager.getUserPseudo(), new GetUserCallback() {
+                        @Override
+                        public void onCallback(User user)  {
+                            try {
+                                os.write(user.getPseudo().getBytes(StandardCharsets.UTF_8));
+                                //os.write(user.getPhoto().getBytes(StandardCharsets.UTF_8));// un bitmap normalement
+                                Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
+                                        R.drawable.profil);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                byte[] byteArray = stream.toByteArray();
+                                os.write(byteArray.length);
+                                os.write(byteArray);
+                                bmp.recycle();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+
+
+
+						/*UserWithInterests userWithInterests = userDao.getUserWithInterests(user.getUid());
 						os.write(userWithInterests.interests.size());
 						userWithInterests.interests.forEach(interest -> {
 							try {
@@ -135,35 +157,35 @@ public class ServeurMT extends Thread{
 								e.printStackTrace();
 							}
 
-						});
+						});*/
 
-					}else{
-						while(true) {
-							String s =br.readLine();
-							//ajout du message dans la liste de message du chat
+                }else{
+                    while(true) {
+                        String s =br.readLine();
+                        //ajout du message dans la liste de message du chat
 
-							if(!message.equals("")){
-								os.write(message.getBytes(StandardCharsets.UTF_8));
-								message = "";
-							}
+                        if(!message.equals("")){
+                            os.write(message.getBytes(StandardCharsets.UTF_8));
+                            message = "";
+                        }
 
-						}
-					}
+                    }
+                }
 
 
 
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}finally {
-					try {
-						s.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }finally {
+                try {
+                    s.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-		}
-	}
+        }
+    }
 
 }

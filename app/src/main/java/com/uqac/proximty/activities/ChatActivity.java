@@ -2,6 +2,8 @@ package com.uqac.proximty.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.uqac.proximty.PrefManager;
 import com.uqac.proximty.R;
 import com.uqac.proximty.adaptaters.MessagesAdapter;
 import com.uqac.proximty.models.Messages;
@@ -66,6 +70,8 @@ public class ChatActivity extends AppCompatActivity {
 
     MessagesAdapter messagesAdapter;
     ArrayList<Messages> messagesArrayList;
+    PrefManager prefManager;
+    DatabaseReference databaseReference;
 
 
 
@@ -90,6 +96,7 @@ public class ChatActivity extends AppCompatActivity {
         mmessagerecyclerview.setLayoutManager(linearLayoutManager);
         messagesAdapter=new MessagesAdapter(ChatActivity.this,messagesArrayList);
         mmessagerecyclerview.setAdapter(messagesAdapter);
+        prefManager=new PrefManager(this);
 
         intent=getIntent();
         setSupportActionBar(mtoolbarofspecificchat);
@@ -106,15 +113,20 @@ public class ChatActivity extends AppCompatActivity {
         calendar=Calendar.getInstance();
         simpleDateFormat=new SimpleDateFormat("hh:mm a");
         //TODO:: recuperaation automatise
-        msenderuid= "02"; //firebaseAuth.getUid();
-        mrecieveruid= "01"; //mrecieveruid=getIntent().getStringExtra("receiveruid");
+
+
+        msenderuid= prefManager.getUserPseudo();//msenderuid= "02"; //firebaseAuth.getUid();
+        mrecieveruid= getIntent().getStringExtra("receiveruid"); //mrecieveruid=getIntent().getStringExtra("receiveruid");mrecieveruid= "01";
+
         mrecievername=getIntent().getStringExtra("name");//mrecievername= "Youssef Zeus" ;
 
         senderroom=msenderuid+mrecieveruid;
         recieverroom=mrecieveruid+msenderuid;
 
 
-        DatabaseReference databaseReference=firebaseDatabase.getReference().child("chats").child(senderroom).child("messages");
+
+        databaseReference=firebaseDatabase.getReference().child("chats").child(senderroom).child("messages");
+
 
 
         messagesAdapter=new MessagesAdapter(ChatActivity.this,messagesArrayList);
@@ -132,7 +144,6 @@ public class ChatActivity extends AppCompatActivity {
 
         messagesAdapter.notifyDataSetChanged();
 
-
          databaseReference.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -147,6 +158,7 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             @Override
+
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
@@ -192,6 +204,7 @@ public class ChatActivity extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(),enteredmessage,Toast.LENGTH_SHORT).show();
 
+
                     Date date=new Date();
                     currenttime=simpleDateFormat.format(calendar.getTime());
                     //Messages messages=new Messages(enteredmessage,firebaseAuth.getUid(),date.getTime(),currenttime);
@@ -202,6 +215,7 @@ public class ChatActivity extends AppCompatActivity {
                             .child(senderroom)
                             .child("messages")
                             .push().setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
+
 
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -220,7 +234,13 @@ public class ChatActivity extends AppCompatActivity {
                     });
 
                      mgetmessage.setText(null);
-
+                    messagesAdapter.notifyDataSetChanged();
+                    /**
+                    finish();
+                    overridePendingTransition( 0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition( 0, 0);
+**/
 
 
                 }
@@ -228,6 +248,10 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    public static void hideSoftKeyboard (Activity activity, View view) {
+        InputMethodManager imm =(InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+    }
     @Override
     public void onStart() {
         super.onStart();

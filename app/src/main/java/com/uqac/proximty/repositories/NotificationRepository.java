@@ -2,7 +2,9 @@ package com.uqac.proximty.repositories;
 
 
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import com.google.firebase.storage.FirebaseStorage;
 
 import androidx.annotation.NonNull;
@@ -26,7 +28,6 @@ import java.util.concurrent.CompletableFuture;
 public class NotificationRepository {
     FirebaseStorage storage = FirebaseStorage.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     public void add(MNotification notification){
         DocumentReference newNotificationRef = db.collection("notification").document();
         notification.setId(newNotificationRef.getId());

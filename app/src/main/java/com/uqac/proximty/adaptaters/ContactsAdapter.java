@@ -63,6 +63,7 @@ public class ContactsAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
+
             txtStatus = (TextView) itemView.findViewById(R.id.textStatus);
             cardSelect = itemView.findViewById(R.id.cardviewContact);
 
